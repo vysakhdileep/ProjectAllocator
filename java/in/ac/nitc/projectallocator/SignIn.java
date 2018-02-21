@@ -1,8 +1,6 @@
 package in.ac.nitc.projectallocator;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,141 +37,97 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         mPasswordField = findViewById(R.id.password);
         findViewById(R.id.login).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
-        SharedPreferences sharedPref;
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("Value", 0);
-        editor.apply();
-
+    }
+        @Override
+        public void onClick (View view) {
+            signIn();
     }
 
-        @Override
-        public void onClick (View view){
 
-            int j = signIn(mEmailField.getText().toString(), mPasswordField.getText().toString());
-            SharedPreferences sharedPref;
-            sharedPref = getPreferences(Context.MODE_PRIVATE);
-            long flag = sharedPref.getInt("Value", 0);
-            Log.d(TAG, "Flag is "+flag);
-            if (flag == 1) {
-                Log.d(TAG, "Start Student Intent");
-                Intent myIntent = new Intent(this, StudentMain.class);
-                this.startActivity(myIntent);
-            }
-            if (flag == 2) {
-                Log.d(TAG, "Start Faculty Intent");
-                Intent myIntent = new Intent(this, FacultyMain.class);
-                this.startActivity(myIntent);
-            }
-            if (flag == 3){
-                Log.d(TAG, "User does not exist");
-            }
-        }
-
-    private int signIn(String email, String password) {
+    private void signIn( ) {
+        String email = mEmailField.getText().toString();
+        String password = mPasswordField.getText().toString();
         Log.d(TAG, "signIn:" + email);
         if (!validateForm()) {
-            return 0;
+            return ;
         }
-
-
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
                         DatabaseReference FacultyRef = database.child("Faculty");
                         DatabaseReference StudentRef = database.child("Student");
-
-
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-
                             final String uid = user.getUid();
                             Log.d(TAG, "UserID:" + uid);
                             StudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                                     if (dataSnapshot.child(uid).exists()) {
                                         Log.d(TAG, "Student exist");
                                         StudentExist();
+                                        return;
                                     } else {
                                         Log.d(TAG, "Student does not exist");
-
                                     }
-
                                 }
-
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
+                                    Log.d(TAG, "In onCancelled Student");
                                 }
                             });
                             FacultyRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-
                                     if (dataSnapshot.child(uid).exists()) {
                                         Log.d(TAG, "Faculty exist");
                                         FacultyExist();
+                                        return;
                                     } else {
                                         Log.d(TAG, "Faculty does not exist");
-
                                     }
-
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    Log.d(TAG, "In onC ancelled ");
+                                    Log.d(TAG, "In onCancelled Faculty");
                                 }
                             });
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(SignIn.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
-
-        return 0;
+        return ;
     }
 
     private void StudentExist() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("Value", 1);
-        editor.apply();
         Log.d(TAG, "In student exist");
-        long flag = sharedPref.getInt("Value", 0);
-        Log.d(TAG, "Flag in student is "+flag);
+        Log.d(TAG, "Start Student Intent");
+        Intent myIntent = new Intent(this, StudentMain.class);
+        this.startActivity(myIntent);
         return;
     }
 
     private void FacultyExist() {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("Value", 2);
-        editor.apply();
         Log.d(TAG, "In faculty exist");
-        long flag = sharedPref.getInt("Value", 0);
-        Log.d(TAG, "Flag in faculty is "+flag);
+        Log.d(TAG, "Start Faculty Intent");
+        Intent myIntent = new Intent(this, FacultyMain.class);
+        this.startActivity(myIntent);
         return;
     }
 
 
     private boolean validateForm() {
         boolean valid = true;
-
         String email = mEmailField.getText().toString();
         if (TextUtils.isEmpty(email)) {
             mEmailField.setError("Required.");
