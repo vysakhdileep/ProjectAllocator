@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     tools:context="in.ac.nitc.projectallocator.FacultyMain">
 
-    <EditText
-        android:id="@+id/editText"
+    <Button
+        android:id="@+id/sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Faculty"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="126dp" />
+        android:onClick="signOut"
+        android:text="Sign Out"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="31dp" />
+
+    <Button
+        android:id="@+id/view_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="projectRequest"
+        android:text="View Project Request"
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="100dp" />
 </android.support.constraint.ConstraintLayout>
