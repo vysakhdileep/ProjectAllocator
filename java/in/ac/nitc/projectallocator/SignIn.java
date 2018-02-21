@@ -38,9 +38,9 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         findViewById(R.id.login).setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
     }
-        @Override
-        public void onClick (View view) {
-            signIn();
+    @Override
+    public void onClick (View view) {
+        signIn();
     }
 
 
@@ -145,8 +145,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         }
 
         return valid;
-        }
     }
+}
 
 
 
