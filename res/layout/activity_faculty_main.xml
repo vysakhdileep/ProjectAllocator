@@ -29,7 +29,7 @@
         android:layout_marginEnd="50dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
-        android:onClick="projectRequest"
+        android:onClick="projectRequestHandler"
         android:text="Project Request"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
