@@ -6,13 +6,33 @@
     android:layout_height="match_parent"
     tools:context="in.ac.nitc.projectallocator.FacultyMain">
 
-    <EditText
-        android:id="@+id/editText"
+    <Button
+        android:id="@+id/sign_out"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Faculty"
-        tools:layout_editor_absoluteX="70dp"
-        tools:layout_editor_absoluteY="126dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="8dp"
+        android:onClick="signOut"
+        android:text="SignOut"
+        app:layout_constraintBottom_toTopOf="@+id/project_request"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/project_request"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="390dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:onClick="projectRequest"
+        android:text="Project Request"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_out" />
 </android.support.constraint.ConstraintLayout>

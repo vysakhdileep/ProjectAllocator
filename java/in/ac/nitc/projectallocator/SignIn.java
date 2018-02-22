@@ -27,7 +27,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private EditText mEmailField;
     private EditText mPasswordField;
-    private static final String TAG = "LogIn";
+    private static final String TAG = "Test";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
