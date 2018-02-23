@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ProjectAllocator</string>
     <string name="title_activity_student_profile_fragment">StudentProfileFragment</string>
+    <string name="enter_new_username">Enter New Username</string>
+    <string name="enter_new_email">Enter New Email</string>
+    <string name="confirm_edit_stuprofile">Confirm Edit</string>
+    <string name="cancel">Cancel</string>
 </resources>

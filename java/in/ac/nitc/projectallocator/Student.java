@@ -9,17 +9,21 @@ public class Student {
 
     private String Name;
     private String email;
+    private String personalemail;
 
-    public Student( String Name, String email) {
-        //this.mUid = mUid;
-        this.Name = Name;
+    public Student(String name, String email, String personalemail) {
+        Name = name;
         this.email = email;
+        this.personalemail = personalemail;
     }
 
     public Student(){
 
     }
 
+    public String getPersonalemail() {
+        return personalemail;
+    }
 
     public String getName() {
         return Name;

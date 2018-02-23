@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@color/windowBackground">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_new_username"
+        android:id="@+id/new_username"
+        style="@style/Base.Animation.AppCompat.Dialog"/>
+
+    <EditText
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_new_email"
+        android:id="@+id/new_email"
+        style="@style/Base.Animation.AppCompat.Dialog"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/confirm_edit_button"
+        android:drawablePadding="3sp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/confirm_edit_stuprofile"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/cancel_edit_stuProfile"
+        android:drawablePadding="3sp"
+        android:text="@string/cancel"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
