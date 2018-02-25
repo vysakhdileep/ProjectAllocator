@@ -59,8 +59,8 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        isLoggedIn();
-        setContentView(R.layout.activity_faculty_main);
+
+        setContentView(R.layout.activity_sign_in);
 
         mEmailField = findViewById(R.id.email_id);
         mPasswordField = findViewById(R.id.password);
@@ -303,57 +303,15 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         return valid;
     }
 
-    private boolean isLoggedIn(){
-        if(FirebaseAuth.getInstance().getCurrentUser() == null)
-        {
-            Log.d(TAG, "No logged in");
-            return false;
 
-        }
-        else{
-            Log.d(TAG, "login exist");
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-            DatabaseReference FacultyRef = database.child("Faculty");
-            DatabaseReference StudentRef = database.child("Student");
-            final String uid = user.getUid();
-            StudentRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child(uid).exists()) {
-                        Log.d(TAG, "Student exist");
-                        StudentExist();
-                        return;
-                    } else {
-                        Log.d(TAG, "Student does not exist");
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "In onCancelled Student");
-                }
-            });
-            FacultyRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.child(uid).exists()) {
-                        Log.d(TAG, "Faculty exist");
-                        FacultyExist();
-                        return;
-                    } else {
-                        Log.d(TAG, "Faculty does not exist");
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG, "In onCancelled Faculty");
-                }
-            });
-
-        }
-        return true;
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
+
 
 }
 

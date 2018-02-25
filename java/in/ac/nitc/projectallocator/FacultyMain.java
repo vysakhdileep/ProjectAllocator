@@ -89,8 +89,11 @@ public class FacultyMain extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         if (back_pressed + 2000 > System.currentTimeMillis()){
-            FirebaseAuth.getInstance().signOut();
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            //super.onBackPressed();
         }
         else{
             Toast.makeText(getBaseContext(), "Press once again to exit", Toast.LENGTH_SHORT).show();

@@ -113,7 +113,7 @@
         android:layout_marginStart="26dp"
         android:layout_marginTop="18dp"
         android:layout_toEndOf="@+id/forgot_pwd"
-        android:progressDrawable="@drawable/circular_progress_bar"
+        android:background="@drawable/circular_progress_bar"
         tools:foregroundTint="@color/red" />
 
 </RelativeLayout>
