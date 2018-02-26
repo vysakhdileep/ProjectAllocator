@@ -9,12 +9,18 @@ public class Student {
 
     private String Name;
     private String email;
+    private String groupId;
     private String personalemail;
+    private String phonenumber;
+    private String rollnumber;
 
-    public Student(String name, String email, String personalemail) {
-        Name = name;
+    public Student(String Name, String email, String personalemail, String groupId, String phonenumber, String rollnumber) {
+        this.Name = Name;
         this.email = email;
         this.personalemail = personalemail;
+        this.groupId = groupId;
+        this.phonenumber = phonenumber;
+        this.rollnumber = rollnumber;
     }
 
     public Student(){
@@ -25,12 +31,25 @@ public class Student {
         return personalemail;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public String getRollnumber() {
+        return rollnumber;
+    }
+
     public String getName() {
         return Name;
     }
 
-    public String getemail() {
-        return email;
-    }
 
 }

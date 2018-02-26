@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 
 import java.util.ArrayList;
@@ -17,12 +18,17 @@ import java.util.List;
 
 public class StudentMain extends AppCompatActivity {
 
+    final String TAG = "StudentMain";
+
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d(TAG, "Inside Student Main ");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_main);
 
@@ -43,7 +49,7 @@ public class StudentMain extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new StudentProfileFragment(), "Profile");
         adapter.addFragment(new StudentBrowseProjectsFragment(), "Browse Projects");
-//        adapter.addFragment(new ThreeFragment(), "THREE");
+        adapter.addFragment(new StudentPlaceRequestFragment(), "Place Request");
         viewPager.setAdapter(adapter);
     }
 

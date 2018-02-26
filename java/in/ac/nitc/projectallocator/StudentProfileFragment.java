@@ -1,6 +1,7 @@
 package in.ac.nitc.projectallocator;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +31,13 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class StudentProfileFragment extends Fragment{
 
+    final String TAG = "StudentProfileFragment";
+
+
     FirebaseUser user;
     String uid;
     Student stuUser;
     DatabaseReference database, StudentRef;
-
-    FrameLayout layout_MainMenu;
 
     public StudentProfileFragment() {
         // Required empty public constructor
@@ -45,12 +46,13 @@ public class StudentProfileFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Inside StudentProfileFragment ");
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final String TAG = "GotStuff";
 
 
         // Inflate the layout for this fragment
@@ -58,6 +60,9 @@ public class StudentProfileFragment extends Fragment{
 
         final TextView name = view.findViewById(R.id.textview_student_name);
         final TextView email = view.findViewById(R.id.textview_student_email);
+        final TextView loginid = view.findViewById(R.id.textview_student_login_email);
+        final TextView phone = view.findViewById(R.id.textview_student_phonenumber);
+        final TextView rollnum = view.findViewById(R.id.textview_student_rollnumber);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -73,11 +78,19 @@ public class StudentProfileFragment extends Fragment{
                 if (dataSnapshot.exists()) {
 
                         stuUser = dataSnapshot.getValue(Student.class);
+                        StudentRef.child("uid").setValue(uid);
                         name.setText(stuUser.getName());
                         email.setText(stuUser.getPersonalemail());
+                        loginid.setText(stuUser.getEmail());
+                        phone.setText(stuUser.getPhonenumber());
+                        rollnum.setText(stuUser.getRollnumber());
+
                         Log.d(TAG, "email:" + stuUser.getPersonalemail());
                         Log.d(TAG, "Name:" + stuUser.getName());
-
+                        Log.d(TAG, "login:" + stuUser.getEmail());
+                        Log.d(TAG, "phone:" + stuUser.getPhonenumber());
+                        Log.d(TAG, "roll:" + stuUser.getRollnumber());
+                        Log.d(TAG, "groupId:" + stuUser.getGroupId());
                 }
             }
 
@@ -97,36 +110,46 @@ public class StudentProfileFragment extends Fragment{
                 Log.d(TAG, "onClick:view inflate");
                 final EditText newPersonalEmail = (EditText) mView.findViewById(R.id.new_email);
                 final EditText newName = (EditText) mView.findViewById(R.id.new_username);
-                Button confirmButton = (Button) mView.findViewById(R.id.confirm_edit_button);
-                Button cancelButton = (Button) mView.findViewById(R.id.cancel_edit_stuProfile);
+                final EditText newphone = mView.findViewById(R.id.new_phonenumber);
 
                 newName.setText(stuUser.getName());
                 newPersonalEmail.setText(stuUser.getPersonalemail());
+                newphone.setText(stuUser.getPhonenumber().toString());
 
-                confirmButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                mBUilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Either of the following two lines should work.
                         if(!newName.getText().toString().isEmpty() &&
-                                !newPersonalEmail.getText().toString().isEmpty())
+                                !newPersonalEmail.getText().toString().isEmpty() && !newphone.getText().toString().isEmpty())
                         {
+
+                            Log.d(TAG, "newName:" + newName.getText().toString());
+                            Log.d(TAG, "newMail:" + newPersonalEmail.getText().toString());
+                            Log.d(TAG, "newPhone:" + newphone.getText());
+
                             StudentRef.child("Name").setValue(newName.getText().toString());
                             StudentRef.child("personalemail").setValue(newPersonalEmail.getText().toString());
+                            StudentRef.child("phonenumber").setValue(newphone.getText().toString());
                             Toast.makeText(getActivity(), "Update Successful!!",
                                     Toast.LENGTH_SHORT).show();
+
+
 
                         }
                         else
                         {
                             Toast.makeText(getActivity(), "Please fill all empty values...",
                                     Toast.LENGTH_SHORT).show();
+
                         }
                     }
                 });
 
-                cancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
+                mBUilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Either of the following two lines should work.
+                        dialog.cancel();
+                        //dialog.dismiss();
                     }
                 });
 
@@ -139,6 +162,8 @@ public class StudentProfileFragment extends Fragment{
         signoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.d(TAG, "signOut...");
                 FirebaseAuth.getInstance().signOut();
                 Intent myIntent = new Intent(getActivity(), SignIn.class);
                 getActivity().startActivity(myIntent);
