@@ -56,76 +56,10 @@ public class FacultyMain extends AppCompatActivity {
     }
 
 
-    public void signOut(View view)
-    {
-        Log.d(TAG, "Signing Out ");
-        FirebaseAuth.getInstance().signOut();
-        Intent myIntent = new Intent(this, SignIn.class);
-        this.startActivity(myIntent);
-    }
-
-    public void projectRequestHandler(View view)
-    {
-        getRequestData();
-    }
-
-    public void getRequestData()
-    {
-        Log.d(TAG, "Requesting ");
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        DatabaseReference requestQueueRef = mDatabase.child("RequestQueue");
-        final ArrayList<request> requestList = new ArrayList<>();
-
-
-        ValueEventListener requestListener = new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for(DataSnapshot requestsnapshot : dataSnapshot.getChildren())
-                {
-                    Log.d(TAG, "Receieved snapshot ");
-                    requestList.add(requestsnapshot.getValue(request.class));
-
-
-                }
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                int i=0;
-                final String uid = user.getUid();
-                while(i < requestList.size())
-                {
-                    int j=0;
-                    while(j < requestList.get(i).faculties.size())
-                    {
-                        if(uid == requestList.get(i).faculties.get(j).toString())
-                        {
-
-                        }
-                        j++;
-                    }
-                    i++;
-                }
-
-                Log.d(TAG, "requestList.get(0).faculties.get(0) : " + requestList.get(1).faculties.get(2)+""+requestList.size()+" "+requestList.get(1).areas.size());
 
 
 
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
-                // ...
-            }
-
-        };
-
-        requestQueueRef.addValueEventListener(requestListener);
-
-
-        }
     private static long back_pressed;
     @Override
     public void onBackPressed(){
@@ -171,9 +105,9 @@ public class FacultyMain extends AppCompatActivity {
     }
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new FacultyProfile(), (getString(R.string.facultyprofile)));
-        adapter.addFragment(new ViewRequest(), (getString(R.string.viewrequest)));
-        //adapter.addFragment(new ThreeFragment(), "THREE");
+        adapter.addFragment(new FacultyProfileFragment(), (getString(R.string.facultyprofile)));
+        adapter.addFragment(new ViewRequestFragment(), (getString(R.string.viewrequest)));
+        adapter.addFragment(new AddFacultyProjectFragment(), (getString(R.string.add_faculty_project)));
         viewPager.setAdapter(adapter);
     }
 

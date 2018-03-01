@@ -23,6 +23,8 @@
     <string name="back">BACK</string>
     <string name="facultyprofile">Faculty Profile</string>
     <string name="viewrequest">View Request</string>
+    <string name="enterlimit">Enter Limit</string>
+    <string name="createProject">"Create Project"</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -33,4 +35,5 @@
     <string name="enter_new_phonenumber">Enter New Phonenumber</string>
     <string name="enter_rollnumber_of_member">Enter Rollnumber of member</string>
     <string name="select_number_of_members">Select Number Of Members</string>
+    <string name="add_faculty_project">Add Project</string>
 </resources>

@@ -2,12 +2,181 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="in.ac.nitc.projectallocator.FacultyProfile">
+    tools:context="in.ac.nitc.projectallocator.FacultyProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="20dp"
+        android:background="@color/colorAccent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+
+                />
+
+            <TextView
+                android:id="@+id/textview_faculty_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+                android:text="Name"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number:"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="##########"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_centerInParent="false"
+                android:id="@+id/textview_faculty_phonenumber"
+                android:padding="10dp"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+                android:text="Limit"
+                android:textSize="25dp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/textview_faculty_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+                android:text="#########"
+                android:textSize="20dp"
+                android:textStyle="bold"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email:"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:layout_centerInParent="false"
+                android:padding="10dp"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="abc@xyz.com"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_centerInParent="false"
+                android:id="@+id/textview_faculty_email"
+                android:padding="10dp"
+
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/faculty_profile_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="Edit"
+            android:textColor="@color/textColorPrimary" />
+
+        <Button
+            android:id="@+id/faculty_signout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:onClick="SignOut"
+            android:text="SIGN OUT" />
+
+        <Button
+            android:id="@+id/edit_expertise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Area Expertise" />
+
+        <ScrollView
+            android:id="@+id/area_expertise"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+    </LinearLayout>
+
+
+
+
 
 </FrameLayout>

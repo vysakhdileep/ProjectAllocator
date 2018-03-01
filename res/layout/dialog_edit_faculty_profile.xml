@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@color/windowBackground">
+
+    <EditText
+        android:id="@+id/faculty_limit"
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enterlimit"
+        android:padding="10dp" />
+
+    <EditText
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_new_email"
+        android:id="@+id/new_email"
+        style="@style/Base.Animation.AppCompat.Dialog"/>
+
+    <EditText
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/enter_new_phonenumber"
+        android:id="@+id/new_phonenumber"
+        style="@style/Base.Animation.AppCompat.Dialog"/>
+
+    <ListView
+        android:id="@+id/list_expertise"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>
