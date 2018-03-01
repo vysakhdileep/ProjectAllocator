@@ -79,13 +79,12 @@ public class StudentPlaceRequestFragment extends Fragment {
                     stu = dataSnapshot.getValue(Student.class);
 
                     Log.d(TAG, "email:" + stu.getPersonalemail());
-                    Log.d(TAG, "Name:" + stu.getName());
-                    Log.d(TAG, "login:" + stu.getEmail());
+                    Log.d(TAG, "Name:" + stu.getNameof());
                     Log.d(TAG, "phone:" + stu.getPhonenumber());
                     Log.d(TAG, "roll:" + stu.getRollnumber());
-                    Log.d(TAG, "groupId:" + stu.getGroupId());
+                    Log.d(TAG, "groupId:" + stu.getGroupid());
 
-                    if(stu.getGroupId().equals("null"))
+                    if(stu.getGroupid().isEmpty())
                     {
                         createGroupButton.setVisibility(View.VISIBLE);
 

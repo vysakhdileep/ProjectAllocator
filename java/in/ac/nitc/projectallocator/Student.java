@@ -7,36 +7,40 @@ package in.ac.nitc.projectallocator;
 public class Student {
 
 
-    private String Name;
-    private String email;
-    private String groupId;
+    private String nameof;
+    private String groupid;
     private String personalemail;
     private String phonenumber;
     private String rollnumber;
+    private String uid;
 
-    public Student(String Name, String email, String personalemail, String groupId, String phonenumber, String rollnumber) {
-        this.Name = Name;
-        this.email = email;
+    public Student(String Name, String personalemail, String groupId, String phonenumber, String rollnumber, String uid) {
+        this.nameof = Name;
         this.personalemail = personalemail;
-        this.groupId = groupId;
+        this.groupid = groupId;
         this.phonenumber = phonenumber;
         this.rollnumber = rollnumber;
+        this.uid = uid;
     }
 
     public Student(){
 
     }
 
+    public String getNameof() {
+        return nameof;
+    }
+
+    public String getGroupid() {
+        return groupid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
     public String getPersonalemail() {
         return personalemail;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getGroupId() {
-        return groupId;
     }
 
     public String getPhonenumber() {
@@ -47,9 +51,6 @@ public class Student {
         return rollnumber;
     }
 
-    public String getName() {
-        return Name;
-    }
 
 
 }
