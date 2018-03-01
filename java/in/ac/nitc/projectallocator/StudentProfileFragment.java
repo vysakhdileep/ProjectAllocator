@@ -79,18 +79,16 @@ public class StudentProfileFragment extends Fragment{
 
                         stuUser = dataSnapshot.getValue(Student.class);
                         StudentRef.child("uid").setValue(uid);
-                        name.setText(stuUser.getName());
+                        name.setText(stuUser.getNameof());
                         email.setText(stuUser.getPersonalemail());
-                        loginid.setText(stuUser.getEmail());
                         phone.setText(stuUser.getPhonenumber());
                         rollnum.setText(stuUser.getRollnumber());
 
                         Log.d(TAG, "email:" + stuUser.getPersonalemail());
-                        Log.d(TAG, "Name:" + stuUser.getName());
-                        Log.d(TAG, "login:" + stuUser.getEmail());
+                        Log.d(TAG, "Name:" + stuUser.getNameof());
                         Log.d(TAG, "phone:" + stuUser.getPhonenumber());
                         Log.d(TAG, "roll:" + stuUser.getRollnumber());
-                        Log.d(TAG, "groupId:" + stuUser.getGroupId());
+                        Log.d(TAG, "groupId:" + stuUser.getGroupid());
                 }
             }
 
@@ -112,7 +110,7 @@ public class StudentProfileFragment extends Fragment{
                 final EditText newName = (EditText) mView.findViewById(R.id.new_username);
                 final EditText newphone = mView.findViewById(R.id.new_phonenumber);
 
-                newName.setText(stuUser.getName());
+                newName.setText(stuUser.getNameof());
                 newPersonalEmail.setText(stuUser.getPersonalemail());
                 newphone.setText(stuUser.getPhonenumber().toString());
 
