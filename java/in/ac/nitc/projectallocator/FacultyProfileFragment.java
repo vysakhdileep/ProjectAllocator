@@ -1,7 +1,6 @@
 package in.ac.nitc.projectallocator;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +30,11 @@ public class FacultyProfileFragment extends Fragment {
     FirebaseUser user;
     String uid;
     Faculty facUser;
-    DatabaseReference FacultyRef,AreaRef;
+    DatabaseReference FacultyRef, AreaRef;
     ArrayList<String> FacultyExpertise = new ArrayList<>();  //Contain Expertise name of faculty
     ArrayList<String> ExpertiseKey = new ArrayList<>();      //Contain all Expertise Key
-    ArrayList<String> ExpertiseValue=new ArrayList<>();      //Contain all Expertise Value
-    Integer size =0;
+    ArrayList<String> ExpertiseValue = new ArrayList<>();      //Contain all Expertise Value
+    Integer size = 0;
 
     View view;
     private static final String TAG = "Test";
@@ -77,36 +73,33 @@ public class FacultyProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
-                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_faculty_profile,null);
+                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_faculty_profile, null);
                 Log.d(TAG, "onClick:view inflate");
                 final EditText newPersonalEmail = (EditText) mView.findViewById(R.id.new_email);
                 final EditText Limit = (EditText) mView.findViewById(R.id.faculty_limit);
                 final EditText newphone = mView.findViewById(R.id.new_phonenumber);
 
-                Limit.setText(facUser.getLimit());
-                newPersonalEmail.setText(facUser.getEmail());
-                newphone.setText(facUser.getPhoneno());
+                Limit.setText(String.valueOf(facUser.getLimit()));
+                newPersonalEmail.setText(facUser.getPersonalemail());
+                newphone.setText(facUser.getPhonenumber());
 
 
                 mBUilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() { // define the 'Cancel' button
                     public void onClick(DialogInterface dialog, int which) {
                         //Either of the following two lines should work.
-                        if(!Limit.getText().toString().isEmpty() &&
-                                !newPersonalEmail.getText().toString().isEmpty() && !newphone.getText().toString().isEmpty())
-                        {
+                        if (!Limit.getText().toString().isEmpty() &&
+                                !newPersonalEmail.getText().toString().isEmpty() && !newphone.getText().toString().isEmpty()) {
 
                             Log.d(TAG, "Limit" + Limit.getText().toString());
                             Log.d(TAG, "newMail:" + newPersonalEmail.getText().toString());
                             Log.d(TAG, "newPhone:" + newphone.getText());
-                            FacultyRef.child("Limit").setValue(Limit.getText().toString());
-                            FacultyRef.child("Phoneno").setValue(newphone.getText().toString());
+                            FacultyRef.child("limit").setValue(Integer.parseInt(Limit.getText().toString()));
+                            FacultyRef.child("phonenumber").setValue(newphone.getText().toString());
                             Toast.makeText(getActivity(), "Update Successful!!",
                                     Toast.LENGTH_SHORT).show();
 
 
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(getActivity(), "Please fill all empty values...",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -140,25 +133,25 @@ public class FacultyProfileFragment extends Fragment {
         FacultyRef = FirebaseDatabase.getInstance().getReference().child("Faculty").child(uid);
         AreaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
 
+        Log.d(TAG, "Fetching faculty ");
         FacultyRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
                     facUser = dataSnapshot.getValue(Faculty.class);
-                    name.setText(facUser.getName());
-                    email.setText(facUser.getEmail());
-                    phone_no.setText(facUser.getPhoneno());
-                    limit.setText(facUser.getLimit());
+                    name.setText(facUser.getNameof());
+                    email.setText(facUser.getPersonalemail());
+                    phone_no.setText(facUser.getPhonenumber());
+                    limit.setText(String.valueOf(facUser.getLimit()));
 
-                    Log.d(TAG, "Name:" + facUser.getName());
-                    Log.d(TAG, "login:" + facUser.getEmail());
-                    Log.d(TAG, "phoneno " + facUser.getPhoneno());
+                    Log.d(TAG, "Name:" + facUser.getNameof());
+                    Log.d(TAG, "login:" + facUser.getPersonalemail());
+                    Log.d(TAG, "phoneno " + facUser.getPhonenumber());
                     size = 0;
-                    if(dataSnapshot.hasChild("Areas")) {
-                        Log.d(TAG, "Areas " + facUser.areas.size());
-                        size = facUser.areas.size();
-                        Log.d(TAG, "Size is " + size);
+                    if (dataSnapshot.hasChild("areas")) {
+                        size = facUser.getAreas().size();
+                        Log.d(TAG, "Area Size is " + size);
                     }
                 }
             }
@@ -170,26 +163,20 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
-        Log.d(TAG,"fetching expertise ");
-        AreaRef.addValueEventListener(new ValueEventListener(){
+        Log.d(TAG, "fetching expertise ");
+        AreaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    Log.d(TAG,"Key is "+snapshot.getKey());
-                    Log.d(TAG, "Value is "+snapshot.getValue());
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Key is " + snapshot.getKey());
+                    Log.d(TAG, "Value is " + snapshot.getValue());
                     ExpertiseKey.add(snapshot.getKey());
                     ExpertiseValue.add(snapshot.getValue().toString());
                 }
 
-
-
                 int i = 0;
-                while ( i < size)
-                {
-
-                            FacultyExpertise.add(dataSnapshot.child(facUser.areas.get(i)).getValue().toString());
-
-
+                while (i < size) {
+                    FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
                     i++;
                 }
 

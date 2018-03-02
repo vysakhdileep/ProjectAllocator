@@ -7,18 +7,19 @@ import java.util.ArrayList;
  */
 
 public class Faculty {
-    private String Name;
-    private String Email;
-    private String Phoneno;
-    private String Limit;
-    public ArrayList<String> areas;
+    private String nameof;
+    private String personalemail;
+    private String phonenumber;
+    private Integer limit;
+    private String uid;
+    private ArrayList<String> areas;
 
-
-    public Faculty(String name, String email, String phoneno, String limit, ArrayList<String> areas) {
-        Name = name;
-        Email = email;
-        Phoneno = phoneno;
-        Limit = limit;
+    public Faculty(String name, String personalemail, String phonenumber, Integer limit, String uid, ArrayList<String> areas) {
+        this.nameof = name;
+        this.personalemail = personalemail;
+        this.phonenumber = phonenumber;
+        this.limit = limit;
+        this.uid = uid;
         this.areas = areas;
     }
 
@@ -26,23 +27,24 @@ public class Faculty {
 
     }
 
-    public String getName() {
-        return Name;
+    public String getNameof() {
+        return nameof;
     }
 
-
-    public String getEmail() {
-        return Email;
+    public String getPersonalemail() {
+        return personalemail;
     }
 
-
-    public String getPhoneno() {
-        return Phoneno;
+    public String getPhonenumber() {
+        return phonenumber;
     }
 
+    public Integer getLimit() {
+        return limit;
+    }
 
-    public String getLimit() {
-        return Limit;
+    public String getUid() {
+        return uid;
     }
 
     public ArrayList<String> getAreas() {
