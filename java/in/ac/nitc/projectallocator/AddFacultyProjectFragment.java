@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,12 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
-
-
 public class AddFacultyProjectFragment extends Fragment {
 
-
+    private static final String TAG = "AddFacProjectFrag";
     View view;
     String uid;
     FirebaseUser user;
@@ -69,7 +65,7 @@ public class AddFacultyProjectFragment extends Fragment {
                 ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
                 String key =  ProjectIdeas.push().getKey();
 
-                ProjectIdeas.child(key).child("Name").setValue("PRoject");
+                ProjectIdeas.child(key).child("Name").setValue("Project");
                 ProjectIdeas.child(key).child("facultyid").setValue(uid);
                 ProjectIdeas.child(key).child("areas").child("0").setValue(ExpertiseKey.get(pos));
             }

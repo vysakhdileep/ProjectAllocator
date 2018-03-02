@@ -37,7 +37,7 @@ public class FacultyProfileFragment extends Fragment {
     Integer size = 0;
 
     View view;
-    private static final String TAG = "Test";
+    private static final String TAG = "FacProfileFrag";
 
     public FacultyProfileFragment() {
         // Required empty public constructor

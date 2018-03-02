@@ -3,7 +3,7 @@ package in.ac.nitc.projectallocator;
 import java.util.ArrayList;
 
 /**
- * Created by User on 27-02-2018.
+ * Created by Arun Joseph on 03-02-2018.
  */
 
 public class Faculty {

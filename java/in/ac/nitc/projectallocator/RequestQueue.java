@@ -1,17 +1,12 @@
 package in.ac.nitc.projectallocator;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by User on 21-02-2018.
  */
 
-public class request
+public class RequestQueue
 {
     ArrayList< String> areas;
     ArrayList<String> faculties;
@@ -32,12 +27,12 @@ public class request
         return this.group;
     }
 
-    public request()
+    public RequestQueue()
     {
         //empty constructor
     }
 
-    public request(ArrayList< String> areas, ArrayList<String> faculties, String group)
+    public RequestQueue(ArrayList< String> areas, ArrayList<String> faculties, String group)
     {
         this.areas = areas;
         this.faculties = faculties;
