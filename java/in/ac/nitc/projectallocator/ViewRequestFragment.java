@@ -18,7 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-
 public class ViewRequestFragment extends Fragment {
 
     private static final String TAG = "ViewRequestFrag";
@@ -30,7 +29,6 @@ public class ViewRequestFragment extends Fragment {
     public ViewRequestFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,9 +66,9 @@ public class ViewRequestFragment extends Fragment {
                 int i = 0;
                 final String uid = user.getUid();
                 while (i < requestList.size()) {
-                    int j=requestList.get(i).faculties.size();
-                    if(j!=0){
-                        if (uid.equals(requestList.get(i).faculties.get(j-1))) {
+                    int j = requestList.get(i).faculties.size();
+                    if (j != 0) {
+                        if (uid.equals(requestList.get(i).faculties.get(j - 1))) {
                             Log.d(TAG, "requestList.get(): " + requestList.get(i).group);
                             requestFacultyList.add(requestList.get(i));
                         }
@@ -86,7 +84,6 @@ public class ViewRequestFragment extends Fragment {
                 Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
                 // ...
             }
-
         });
     }
 
