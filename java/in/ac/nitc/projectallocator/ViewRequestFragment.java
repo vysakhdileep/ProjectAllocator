@@ -17,14 +17,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ViewRequestFragment extends Fragment {
 
     private static final String TAG = "ViewRequestFrag";
-    private DatabaseReference mDatabase, requestQueueRef;
+    private DatabaseReference mDatabase, requestQueueRef, areaExpertiseRef;
     View view;
     ArrayList<RequestQueue> requestList = new ArrayList<>();
     ArrayList<RequestQueue> requestFacultyList = new ArrayList<>();
+    ArrayList<String> areas;
+    HashMap<String, String> areaExpertise = new HashMap<>();
 
     public ViewRequestFragment() {
         // Required empty public constructor
@@ -51,6 +54,27 @@ public class ViewRequestFragment extends Fragment {
         Log.d(TAG, "Requesting ");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         requestQueueRef = mDatabase.child("RequestQueue");
+        areaExpertiseRef = mDatabase.child("AreaExpertise");
+
+        areaExpertiseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                areaExpertise.clear();
+                if (!dataSnapshot.exists())
+                    Log.d(TAG, "NULL!!!");
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Received snapshot AreaExpertise");
+                    areaExpertise.put(requestSnapshot.getKey(), requestSnapshot.getValue(String.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
 
         requestQueueRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,20 +84,22 @@ public class ViewRequestFragment extends Fragment {
                 if (!dataSnapshot.exists())
                     Log.d(TAG, "NULL!!!");
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "Received snapshot ");
+                    Log.d(TAG, "Received snapshot RequestQueue");
                     requestList.add(requestSnapshot.getValue(RequestQueue.class));
                 }
-                Log.d(TAG, "Start requestList");
+
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 int i = 0;
                 final String uid = user.getUid();
                 while (i < requestList.size()) {
                     int j = requestList.get(i).faculties.size();
-                    if (j != 0) {
-                        if (uid.equals(requestList.get(i).faculties.get(j - 1))) {
-                            Log.d(TAG, "requestList.get(): " + requestList.get(i).group);
-                            requestFacultyList.add(requestList.get(i));
+                    if (j != 0 && uid.equals(requestList.get(i).faculties.get(j - 1))) {
+                        areas = new ArrayList<>();
+                        for (int k = 0; k < requestList.get(i).getAreas().size(); k++) {
+                            areas.add(areaExpertise.get(requestList.get(i).getAreas().get(k)));
                         }
+                        requestList.get(i).areas = areas;
+                        requestFacultyList.add(requestList.get(i));
                     }
                     i++;
                 }

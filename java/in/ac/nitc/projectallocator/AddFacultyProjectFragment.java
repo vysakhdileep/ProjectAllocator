@@ -83,8 +83,6 @@ public class AddFacultyProjectFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ExpertiseKey.add(snapshot.getKey());
                     ExpertiseValue.add(snapshot.getValue(String.class));
-                    Log.d(TAG, "Key is " + snapshot.getKey());
-                    Log.d(TAG, "Value is " + snapshot.getValue());
                 }
                 Spinner dropdown = (Spinner) view.findViewById(R.id.spinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ExpertiseValue);

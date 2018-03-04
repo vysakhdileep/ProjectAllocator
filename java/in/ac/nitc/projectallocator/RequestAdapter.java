@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +44,9 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
         requestGroup.setText(currRequest.getGroup());
 
-        getArea(listItemView, currRequest.getAreas());
+        Log.d(TAG, "Area size: " + currRequest.getAreas().size());
+        for (int i = 0; i < currRequest.getAreas().size(); i++)
+            printArea((LinearLayout) listItemView.findViewById(R.id.request_list_areas), currRequest.getAreas().get(i));
 
         Log.d(TAG, "start acceptButton");
         Button acceptButton = listItemView.findViewById(R.id.accept_request);
@@ -109,10 +111,10 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         return listItemView;
     }
 
-    public void getArea(View listItemView, ArrayList<String> requestArea) {
-        Log.d(TAG, "Area size: "+requestArea.size());
-        RequestAreaAdapter areaAdapter = new RequestAreaAdapter(getContext(), R.layout.request_area_item, requestArea);
-        ListView listView = (ListView) listItemView.findViewById(R.id.request_list_areas);
-        listView.setAdapter(areaAdapter);
+    public void printArea(LinearLayout listItemView, String requestArea) {
+        Log.d(TAG, "Area: " + requestArea);
+        TextView textView = new TextView(getContext());
+        textView.setText(requestArea);
+        listItemView.addView(textView);
     }
 }

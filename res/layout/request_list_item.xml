@@ -8,10 +8,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ListView
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Areas of the Project :-" />
+
+    <LinearLayout
         android:id="@+id/request_list_areas"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
     <Button
         android:id="@+id/accept_request"
