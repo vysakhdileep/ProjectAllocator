@@ -8,27 +8,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
+    <ListView
         android:id="@+id/request_list_areas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/accept_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCEPT Request"
-        android:textColor="@color/textColorPrimary"
-        android:id="@+id/accept_request"
+        android:layout_marginTop="10dp"
         android:background="@color/colorPrimaryDark"
-        android:layout_marginTop="10dp"/>
+        android:text="ACCEPT Request"
+        android:textColor="@color/textColorPrimary" />
 
     <Button
+        android:id="@+id/reject_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="REJECT Request"
-        android:id="@+id/reject_request"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:text="REJECT Request" />
 
 </LinearLayout>

@@ -55,6 +55,8 @@ public class ViewRequestFragment extends Fragment {
         requestQueueRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                requestList.clear();
+                requestFacultyList.clear();
                 if (!dataSnapshot.exists())
                     Log.d(TAG, "NULL!!!");
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {

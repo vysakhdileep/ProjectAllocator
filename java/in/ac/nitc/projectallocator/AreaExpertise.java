@@ -9,18 +9,15 @@ import java.util.ArrayList;
 public class AreaExpertise {
     private ArrayList<String> areas;
 
-    public AreaExpertise(){
+    public AreaExpertise() {
 
     }
+
     public AreaExpertise(ArrayList<String> areas) {
         this.areas = areas;
     }
 
     public ArrayList<String> getAreas() {
         return areas;
-    }
-
-    public void setAreas(ArrayList<String> areas) {
-        this.areas = areas;
     }
 }

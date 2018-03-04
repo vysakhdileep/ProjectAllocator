@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,18 +33,18 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
 
-        if(listItemView == null) {
+        if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.request_list_item, parent, false);
         }
 
         RequestQueue currRequest = getItem(position);
+        Log.d(TAG, "position: " + position);
 
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
-        TextView requestAreas = (TextView) listItemView.findViewById(R.id.request_list_areas);
-
         requestGroup.setText(currRequest.getGroup());
-        requestAreas.setText(currRequest.getAreas().get(0));
+
+        getArea(listItemView, currRequest.getAreas());
 
         Log.d(TAG, "start acceptButton");
         Button acceptButton = listItemView.findViewById(R.id.accept_request);
@@ -56,7 +57,6 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
 
                 mBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
 
 
                         Toast.makeText(getContext(), "Project Accepted",
@@ -74,7 +74,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                 mBuilder.show();
             }
         });
-        Log.d(TAG, "end rejectButton");
+        Log.d(TAG, "end acceptButton");
 
         Log.d(TAG, "start rejectButton");
         Button rejectButton = listItemView.findViewById(R.id.reject_request);
@@ -89,13 +89,12 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                     public void onClick(DialogInterface dialog, int which) {
 
 
-
                         Toast.makeText(getContext(), "Project Rejected",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
@@ -108,5 +107,12 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         Log.d(TAG, "end rejectButton");
 
         return listItemView;
+    }
+
+    public void getArea(View listItemView, ArrayList<String> requestArea) {
+        Log.d(TAG, "Area size: "+requestArea.size());
+        RequestAreaAdapter areaAdapter = new RequestAreaAdapter(getContext(), R.layout.request_area_item, requestArea);
+        ListView listView = (ListView) listItemView.findViewById(R.id.request_list_areas);
+        listView.setAdapter(areaAdapter);
     }
 }

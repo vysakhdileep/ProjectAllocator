@@ -33,7 +33,7 @@ public class AddFacultyProjectFragment extends Fragment {
     ArrayList<String> ExpertiseKey = new ArrayList<>();      //Contain all Expertise Key
     ArrayList<String> ExpertiseValue = new ArrayList<String>();      //Contain all Expertise Value
 
-    DatabaseReference AreaRef,ProjectIdeas;
+    DatabaseReference AreaRef, ProjectIdeas;
 
     public AddFacultyProjectFragment() {
         // Required empty public constructor
@@ -51,7 +51,7 @@ public class AddFacultyProjectFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-       view = inflater.inflate(R.layout.fragment_add_faculty_project, container, false);
+        view = inflater.inflate(R.layout.fragment_add_faculty_project, container, false);
         getAreaExpertise();
 
         Button CreateProject = view.findViewById(R.id.create_project);
@@ -63,7 +63,7 @@ public class AddFacultyProjectFragment extends Fragment {
                 user = FirebaseAuth.getInstance().getCurrentUser();
                 uid = user.getUid();
                 ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
-                String key =  ProjectIdeas.push().getKey();
+                String key = ProjectIdeas.push().getKey();
 
                 ProjectIdeas.child(key).child("Name").setValue("Project");
                 ProjectIdeas.child(key).child("facultyid").setValue(uid);
@@ -74,20 +74,17 @@ public class AddFacultyProjectFragment extends Fragment {
     }
 
 
-
-
-
-    public void getAreaExpertise(){
+    public void getAreaExpertise() {
         AreaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
 
-        AreaRef.addValueEventListener(new ValueEventListener(){
+        AreaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ExpertiseKey.add(snapshot.getKey());
                     ExpertiseValue.add(snapshot.getValue(String.class));
-                    Log.d(TAG,"Key is "+snapshot.getKey());
-                    Log.d(TAG, "Value is "+snapshot.getValue());
+                    Log.d(TAG, "Key is " + snapshot.getKey());
+                    Log.d(TAG, "Value is " + snapshot.getValue());
                 }
                 Spinner dropdown = (Spinner) view.findViewById(R.id.spinner);
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ExpertiseValue);
@@ -99,7 +96,7 @@ public class AddFacultyProjectFragment extends Fragment {
                         // Object item = parentView.getItemAtPosition(position);
 
                         pos = position;
-                        Log.d(TAG,"position "+pos);
+                        Log.d(TAG, "position " + pos);
 
                     }
 
