@@ -15,6 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 /**
@@ -23,6 +30,7 @@ import java.util.ArrayList;
 
 public class RequestAdapter extends ArrayAdapter<RequestQueue> {
     private static final String TAG = "RequestAdapter";
+    private DatabaseReference mDatabase, requestDatabase;
 
     public RequestAdapter(@NonNull Context context, int resource, ArrayList<RequestQueue> objects) {
         super(context, resource, objects);
@@ -30,7 +38,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View listItemView = convertView;
 
         if (listItemView == null) {
@@ -48,7 +56,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         for (int i = 0; i < currRequest.getAreas().size(); i++)
             printArea((LinearLayout) listItemView.findViewById(R.id.request_list_areas), currRequest.getAreas().get(i));
 
-        Log.d(TAG, "start acceptButton");
+        Log.d(TAG, "acceptButton");
         Button acceptButton = listItemView.findViewById(R.id.accept_request);
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +67,9 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
 
                 mBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        int k = position + 1;
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue("ACCEPTED");
 
                         Toast.makeText(getContext(), "Project Accepted",
                                 Toast.LENGTH_SHORT).show();
@@ -76,9 +86,8 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                 mBuilder.show();
             }
         });
-        Log.d(TAG, "end acceptButton");
 
-        Log.d(TAG, "start rejectButton");
+        Log.d(TAG, "rejectButton");
         Button rejectButton = listItemView.findViewById(R.id.reject_request);
         rejectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +98,32 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
 
                 mBuilder.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        final int k = position + 1;
+                        final String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        requestDatabase = mDatabase.child("RequestQueue");
 
+                        requestDatabase.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (!dataSnapshot.exists())
+                                    Log.d(TAG, "NULL!!!");
+                                long l = dataSnapshot.child(String.valueOf(k)).child("faculties").getChildrenCount();
+                                if (l > 0 && dataSnapshot.child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
+                                    mDatabase.child("RequestQueue").child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).removeValue();
+                                    if (l == 1)
+                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue("REJECTED");
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
+                                // ...
+                            }
+                        });
 
                         Toast.makeText(getContext(), "Project Rejected",
                                 Toast.LENGTH_SHORT).show();
@@ -106,7 +140,6 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                 mBuilder.show();
             }
         });
-        Log.d(TAG, "end rejectButton");
 
         return listItemView;
     }

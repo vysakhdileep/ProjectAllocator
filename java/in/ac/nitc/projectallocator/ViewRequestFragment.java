@@ -92,7 +92,9 @@ public class ViewRequestFragment extends Fragment {
                 int i = 0;
                 final String uid = user.getUid();
                 while (i < requestList.size()) {
-                    int j = requestList.get(i).faculties.size();
+                    int j = 0;
+                    if (requestList.get(i).faculties != null && requestList.get(i).status.equals("PENDING"))
+                        j = requestList.get(i).faculties.size();
                     if (j != 0 && uid.equals(requestList.get(i).faculties.get(j - 1))) {
                         areas = new ArrayList<>();
                         for (int k = 0; k < requestList.get(i).getAreas().size(); k++) {

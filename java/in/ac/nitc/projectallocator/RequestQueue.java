@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class RequestQueue {
     ArrayList<String> areas;
     ArrayList<String> faculties;
+    String status;
     String group;
 
     public ArrayList<String> getAreas() {
@@ -23,13 +24,18 @@ public class RequestQueue {
         return this.group;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public RequestQueue() {
         //empty constructor
     }
 
-    public RequestQueue(ArrayList<String> areas, ArrayList<String> faculties, String group) {
+    public RequestQueue(ArrayList<String> areas, ArrayList<String> faculties, String status, String group) {
         this.areas = areas;
         this.faculties = faculties;
+        this.status = status;
         this.group = group;
     }
 }
