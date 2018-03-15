@@ -69,8 +69,10 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                     public void onClick(DialogInterface dialog, int which) {
                         int k = position + 1;
                         mDatabase = FirebaseDatabase.getInstance().getReference();
-                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue("ACCEPTED");
+                        String accept ="ACCEPTED";
+                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(accept);
 
+                        FirebaseMessageService.Listening(accept);
                         Toast.makeText(getContext(), "Project Accepted",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -112,7 +114,12 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                                 if (l > 0 && dataSnapshot.child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
                                     mDatabase.child("RequestQueue").child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).removeValue();
                                     if (l == 1)
-                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue("REJECTED");
+                                    {
+                                        String reject = "REJECT";
+                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(reject);
+                                        FirebaseMessageService.Listening(reject);
+                                    }
+
                                 }
 
                             }

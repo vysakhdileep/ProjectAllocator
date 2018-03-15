@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,20 +56,28 @@ public class AddFacultyProjectFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_add_faculty_project, container, false);
         getAreaExpertise();
 
-        Button CreateProject = view.findViewById(R.id.create_project);
+        Button CreateProject = view.findViewById(R.id.submit_project);
         CreateProject.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //EditText name = (EditText) view.findViewById(R.id.name_project);
-                //String temp = name.getText().toString();
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                uid = user.getUid();
-                ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
-                String key = ProjectIdeas.push().getKey();
+            public void onClick(View mview) {
+                EditText project_name = (EditText) view.findViewById(R.id.name_project);
 
-                ProjectIdeas.child(key).child("Name").setValue("Project");
-                ProjectIdeas.child(key).child("facultyid").setValue(uid);
-                ProjectIdeas.child(key).child("areas").child("0").setValue(ExpertiseKey.get(pos));
+                String temp = project_name.getText().toString();
+                if(temp == null)
+                {
+                    Toast.makeText(getContext(), "Enter valid Project name",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    user = FirebaseAuth.getInstance().getCurrentUser();
+                    uid = user.getUid();
+                    ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
+                    String key = ProjectIdeas.push().getKey();
+
+                    ProjectIdeas.child(key).child("Name").setValue(temp);
+                    ProjectIdeas.child(key).child("facultyid").setValue(uid);
+                    ProjectIdeas.child(key).child("areas").child("0").setValue(ExpertiseKey.get(pos));
+                }
             }
         });
         return view;
@@ -84,7 +94,10 @@ public class AddFacultyProjectFragment extends Fragment {
                     ExpertiseKey.add(snapshot.getKey());
                     ExpertiseValue.add(snapshot.getValue(String.class));
                 }
+
                 Spinner dropdown = (Spinner) view.findViewById(R.id.spinner);
+
+
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ExpertiseValue);
                 dropdown.setAdapter(adapter);
                 dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -113,4 +126,5 @@ public class AddFacultyProjectFragment extends Fragment {
             }
         });
     }
+
 }

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Areas of the Project :-" />
+        android:text="@string/area_request" />
 
     <LinearLayout
         android:id="@+id/request_list_areas"
@@ -19,22 +20,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" />
 
-    <Button
-        android:id="@+id/accept_request"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/sample"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="ACCEPT Request"
-        android:textColor="@color/textColorPrimary" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/reject_request"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:text="REJECT Request" />
+        <Button
+            android:id="@+id/accept_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="left"
+            android:text="@string/accept"
+            android:textColor="@color/textColorPrimary" />
 
+        <Button
+            android:id="@+id/reject_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="@string/reject" />
+    </LinearLayout>
 </LinearLayout>

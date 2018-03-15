@@ -1,9 +1,13 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         isLoggedIn();
 
+
     }
     @Override
     public void onResume() {
@@ -33,6 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void isLoggedIn() {
+
+       /* ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+        if(networkInfo == null)
+        {
+            Toast toast=Toast.makeText(getApplicationContext(),"Please check your net connectivity.....",Toast.LENGTH_LONG);
+            toast.setMargin(50,50);
+            toast.show();
+
+        }*/
+
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Log.d(TAG, "No logged in");
             Intent myIntent = new Intent(this, SignIn.class);
@@ -89,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Start Student Intent");
         Intent myIntent = new Intent(this, StudentMain.class);
         this.startActivity(myIntent);
+        checkNotification();
         return;
     }
 
@@ -100,4 +118,28 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
+    private void checkNotification(){
+
+
+    }
+
+
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        return;
+        }
+        else { Toast.makeText(getBaseContext(), "Tap back button in order to exit", Toast.LENGTH_SHORT).show(); }
+
+        mBackPressed = System.currentTimeMillis();
+    }
 }
