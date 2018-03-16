@@ -1,7 +1,9 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,8 +33,9 @@ public class AddFacultyProjectFragment extends Fragment {
     View view;
     String uid;
     FirebaseUser user;
-    int pos;
+    Integer i = 0;
 
+    ArrayList<Integer> Values =new ArrayList<>();
 
     ArrayList<String> ExpertiseKey = new ArrayList<>();      //Contain all Expertise Key
     ArrayList<String> ExpertiseValue = new ArrayList<String>();      //Contain all Expertise Value
@@ -54,6 +59,7 @@ public class AddFacultyProjectFragment extends Fragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_add_faculty_project, container, false);
+        Log.d(TAG," Area Expertise");
         getAreaExpertise();
 
         Button CreateProject = view.findViewById(R.id.submit_project);
@@ -68,6 +74,11 @@ public class AddFacultyProjectFragment extends Fragment {
                     Toast.makeText(getContext(), "Enter valid Project name",
                             Toast.LENGTH_SHORT).show();
                 }
+                if(Values.size() ==0)
+                {
+                    Toast.makeText(getContext(), "Enter area Expertise",
+                            Toast.LENGTH_SHORT).show();
+                }
                 else {
                     user = FirebaseAuth.getInstance().getCurrentUser();
                     uid = user.getUid();
@@ -76,7 +87,22 @@ public class AddFacultyProjectFragment extends Fragment {
 
                     ProjectIdeas.child(key).child("Name").setValue(temp);
                     ProjectIdeas.child(key).child("facultyid").setValue(uid);
-                    ProjectIdeas.child(key).child("areas").child("0").setValue(ExpertiseKey.get(pos));
+
+                    Integer t =0;
+                    while(t < Values.size())
+
+                    {
+                        ProjectIdeas.child(key).child("areas").child(t.toString()).setValue(ExpertiseKey.get(Values.get(t)));
+                        t++;
+
+                    }
+
+                    Toast.makeText(getContext(), "Sucessfully created project..",
+                            Toast.LENGTH_SHORT).show();
+
+                    Intent myIntent = new Intent(view.getContext(),FacultyMain.class);
+                    getActivity().startActivity(myIntent);
+
                 }
             }
         });
@@ -86,7 +112,7 @@ public class AddFacultyProjectFragment extends Fragment {
 
     public void getAreaExpertise() {
         AreaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
-
+        Log.d(TAG," Fetching from databse");
         AreaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -95,27 +121,35 @@ public class AddFacultyProjectFragment extends Fragment {
                     ExpertiseValue.add(snapshot.getValue(String.class));
                 }
 
-                Spinner dropdown = (Spinner) view.findViewById(R.id.spinner);
+                Log.d(TAG," Checkbox setting.......");
+                CheckBox checkBox;
+                LinearLayout linearMain;
+                linearMain = (LinearLayout) view.findViewById(R.id.linear_checkbox);
 
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ExpertiseValue);
-                dropdown.setAdapter(adapter);
-                dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                Log.d(TAG," Values "+i+" "+ ExpertiseValue.size());
+                while (i < ExpertiseValue.size()) {
+                    Log.d(TAG," Inside loop"+i);
+                    checkBox = new CheckBox(getContext());
+                    checkBox.setId(i);
+                    checkBox.setText(ExpertiseValue.get(i));
+                    checkBox.setOnClickListener(getOnClickDoSomething(checkBox));
+                    linearMain.addView(checkBox);
+                    i++;
+                }
+            }
 
-                    public void onItemSelected(AdapterView<?> parentView,
-                                               View selectedItemView, int position, long id) {
-                        // Object item = parentView.getItemAtPosition(position);
 
-                        pos = position;
-                        Log.d(TAG, "position " + pos);
+            View.OnClickListener getOnClickDoSomething(final Button button) {
+                Log.d(TAG," in listener   "+button.getId()+ "  "+button.getText().toString());
+                return new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Values.add(button.getId());
+                        Log.d(TAG,+button.getId()+"  "+button.getText().toString());
+
 
                     }
-
-                    public void onNothingSelected(AdapterView<?> arg0) {// do nothing
-                    }
-
-                });
-
+                };
 
             }
 
@@ -125,6 +159,14 @@ public class AddFacultyProjectFragment extends Fragment {
 
             }
         });
+
+
+
     }
 
+
+
+
 }
+
+

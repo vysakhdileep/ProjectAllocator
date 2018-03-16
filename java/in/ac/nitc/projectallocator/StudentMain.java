@@ -102,4 +102,18 @@ public class StudentMain extends AppCompatActivity {
 
         mBackPressed = System.currentTimeMillis();
     }
+
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(!isConnected) {
+
+            Log.d(TAG, "In Listener");
+            //show a No Internet Alert or Dialog
+            Toast.makeText(getBaseContext(), "No net connectivity", Toast.LENGTH_SHORT).show();
+
+        }else{
+            Log.d(TAG, "In Listener net exist");
+            Toast.makeText(getBaseContext(), "Connected to network", Toast.LENGTH_SHORT).show();
+            // dismiss the dialog or refresh the activity
+        }
+    }
 }

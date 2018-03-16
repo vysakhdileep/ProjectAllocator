@@ -43,7 +43,19 @@ public class FacultyMain extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(!isConnected) {
 
+            Log.d(TAG, "In Listener");
+            //show a No Internet Alert or Dialog
+            Toast.makeText(getBaseContext(), "No net connectivity", Toast.LENGTH_SHORT).show();
+
+        }else{
+            Log.d(TAG, "In Listener net exist");
+            Toast.makeText(getBaseContext(), "Connected to network", Toast.LENGTH_SHORT).show();
+            // dismiss the dialog or refresh the activity
+        }
+    }
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -77,6 +89,7 @@ public class FacultyMain extends AppCompatActivity {
         adapter.addFragment(new FacultyProfileFragment(), (getString(R.string.facultyprofile)));
         adapter.addFragment(new ViewRequestFragment(), (getString(R.string.viewrequest)));
         adapter.addFragment(new AddFacultyProjectFragment(), (getString(R.string.add_faculty_project)));
+        adapter.addFragment(new FacultyProjectFragment(),(getString(R.string.project_list)));
         viewPager.setAdapter(adapter);
     }
 

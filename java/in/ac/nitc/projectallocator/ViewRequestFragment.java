@@ -122,6 +122,8 @@ public class ViewRequestFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.listView1);
         listView.setAdapter(requestAdapter);
     }
+
+
 }
 
 

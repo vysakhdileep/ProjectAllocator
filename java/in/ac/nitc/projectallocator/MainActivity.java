@@ -32,23 +32,36 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         Log.d(TAG, "Calling on resume");
-        isLoggedIn();
+        Boolean connectivity =isOnline(getBaseContext());
+        if(connectivity == true) {
+            isLoggedIn();
+        }
+        else
+        {
+            Log.d(TAG, "No connection");
+            Toast.makeText(MainActivity.this, "No connectivity.....",
+                    Toast.LENGTH_LONG).show();
 
+        }
+    }
+
+
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(!isConnected) {
+
+            Log.d(TAG, "In Listener");
+            //show a No Internet Alert or Dialog
+
+        }else{
+            Log.d(TAG, "In Listener net exist");
+            Toast.makeText(MainActivity.this, "Connected to network", Toast.LENGTH_SHORT).show();
+            isLoggedIn();
+            // dismiss the dialog or refresh the activity
+        }
     }
 
 
     private void isLoggedIn() {
-
-       /* ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-
-        if(networkInfo == null)
-        {
-            Toast toast=Toast.makeText(getApplicationContext(),"Please check your net connectivity.....",Toast.LENGTH_LONG);
-            toast.setMargin(50,50);
-            toast.show();
-
-        }*/
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Log.d(TAG, "No logged in");
@@ -122,7 +135,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    public boolean isOnline(Context context) {
 
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in airplane mode it will be null
+        return (netInfo != null && netInfo.isConnected());
+    }
 
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;

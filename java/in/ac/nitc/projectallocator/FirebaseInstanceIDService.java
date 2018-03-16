@@ -11,7 +11,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 /**
- * Created by User on 14-03-2018.
+ * Created by Vysakh Dileep on 14-03-2018.
  */
 
 public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -39,7 +39,7 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
@@ -47,11 +47,12 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String uid = user.getUid();
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference TokenRef = database.child("Tokens");
-        TokenRef.child(uid).setValue(token);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            final String uid = user.getUid();
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference TokenRef = database.child("Tokens");
+            TokenRef.child(uid).setValue(token);
+        }
     }
 }
-

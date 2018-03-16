@@ -39,4 +39,5 @@
     <string name="area_request">Area of Expertise</string>
     <string name="accept">Accept Request</string>
     <string name="reject">Reject Request</string>
+    <string name="project_list">Project List</string>
 </resources>

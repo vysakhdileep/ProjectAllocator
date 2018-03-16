@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 
 public class RequestAdapter extends ArrayAdapter<RequestQueue> {
     private static final String TAG = "RequestAdapter";
-    private DatabaseReference mDatabase, requestDatabase;
+    private DatabaseReference mDatabase, requestDatabase, acceptDatabase;
 
     public RequestAdapter(@NonNull Context context, int resource, ArrayList<RequestQueue> objects) {
         super(context, resource, objects);
@@ -69,7 +70,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                     public void onClick(DialogInterface dialog, int which) {
                         int k = position + 1;
                         mDatabase = FirebaseDatabase.getInstance().getReference();
-                        String accept ="ACCEPTED";
+                        String accept = "ACCEPTED";
                         mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(accept);
 
                         FirebaseMessageService.Listening(accept);
@@ -113,11 +114,12 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                                 long l = dataSnapshot.child(String.valueOf(k)).child("faculties").getChildrenCount();
                                 if (l > 0 && dataSnapshot.child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
                                     mDatabase.child("RequestQueue").child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).removeValue();
-                                    if (l == 1)
-                                    {
-                                        String reject = "REJECT";
+                                    if (l == 1) {
+                                        String reject = "REJECTED";
                                         mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(reject);
+                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).removeValue();
                                         FirebaseMessageService.Listening(reject);
+
                                     }
 
                                 }
@@ -151,10 +153,12 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         return listItemView;
     }
 
-    public void printArea(LinearLayout listItemView, String requestArea) {
+    private void printArea(LinearLayout listItemView, String requestArea) {
         Log.d(TAG, "Area: " + requestArea);
         TextView textView = new TextView(getContext());
         textView.setText(requestArea);
         listItemView.addView(textView);
     }
+
+
 }
