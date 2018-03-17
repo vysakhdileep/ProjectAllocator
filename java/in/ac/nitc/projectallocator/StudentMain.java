@@ -1,5 +1,7 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -103,17 +105,15 @@ public class StudentMain extends AppCompatActivity {
         mBackPressed = System.currentTimeMillis();
     }
 
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        if(!isConnected) {
+    public class NetworkChangeReceiver extends BroadcastReceiver {
 
-            Log.d(TAG, "In Listener");
-            //show a No Internet Alert or Dialog
-            Toast.makeText(getBaseContext(), "No net connectivity", Toast.LENGTH_SHORT).show();
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
 
-        }else{
-            Log.d(TAG, "In Listener net exist");
-            Toast.makeText(getBaseContext(), "Connected to network", Toast.LENGTH_SHORT).show();
-            // dismiss the dialog or refresh the activity
+            Toast.makeText(StudentMain.this, "No Connectivity", Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(getApplication(), MainActivity.class);
+            startActivity(myIntent);
+
         }
     }
 }

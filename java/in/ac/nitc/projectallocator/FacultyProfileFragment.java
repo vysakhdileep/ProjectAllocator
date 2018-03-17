@@ -3,6 +3,7 @@ package in.ac.nitc.projectallocator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -10,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 
 public class FacultyProfileFragment extends Fragment {
@@ -38,6 +44,7 @@ public class FacultyProfileFragment extends Fragment {
 
     View view;
     private static final String TAG = "FacProfileFrag";
+    CheckBox checkBox;
 
     public FacultyProfileFragment() {
         // Required empty public constructor
@@ -68,8 +75,11 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
+
         Button editButton = view.findViewById(R.id.faculty_profile_edit);
-        editButton.setOnClickListener(new View.OnClickListener() {
+        editButton.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
@@ -114,13 +124,80 @@ public class FacultyProfileFragment extends Fragment {
                     }
                 });
 
+
                 mBUilder.setView(mView);
                 mBUilder.show();
+
             }
         });
 
         return view;
     }
+
+    public void editAreaExpertise() {
+        Log.d(TAG, "Edit expertise...");
+        final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
+        final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_expertise, null);
+        LinearLayout linearMain;
+        linearMain = (LinearLayout) mView.findViewById(R.id.list_areas);
+        for (int i = 0; i < ExpertiseValue.size(); i++) {
+            checkBox = new CheckBox(getContext());
+            checkBox.setId(i);
+            checkBox.setText(ExpertiseValue.get(i));
+
+            Log.d(TAG, "Faculty size"+FacultyExpertise.size());
+            for (int j = 0; j < FacultyExpertise.size(); j++) {
+                Log.d(TAG, "Checking for checked");
+                if (ExpertiseValue.get(i).equals(FacultyExpertise.get(j))) {
+                    checkBox.setChecked(true);
+                    Log.d(TAG, "Match is"+ExpertiseValue.get(i) +"  "+FacultyExpertise.get(j));
+                }
+            }
+
+            linearMain.addView(checkBox);
+
+        }
+        final ArrayList<String> checked =new ArrayList<>();
+        Button submitareas = (Button) mView.findViewById(R.id.change_areas);
+        submitareas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checked.clear();
+                Integer i=0;
+                while(i<ExpertiseValue.size()) {
+                    Log.d(TAG,"In while loop");
+                    CheckBox c = (CheckBox) mView.findViewById(i);
+                    if(c.isChecked()) {
+                        checked.add(c.getText().toString());
+                    Log.d(TAG,"checked "+c.getText().toString());
+                    }
+                    i++;
+                }
+                AddAreasFirebase(checked);
+            }
+        });
+        mBUilder.setView(mView);
+        mBUilder.show();
+
+
+    }
+
+    public void AddAreasFirebase(ArrayList<String> checked)
+    {
+        FacultyRef.child("areas").getRef().removeValue();
+        for(int i=0;i<checked.size();i++)
+        {
+            for(int j=0;j<ExpertiseValue.size();j++)
+            {
+                if(ExpertiseValue.get(j).equals(checked.get(i)))
+                {
+                    FacultyRef.child("areas").child(i+"").setValue(ExpertiseKey.get(j));
+                    continue;
+                }
+            }
+        }
+    }
+
 
     public void getRequestData() {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -179,6 +256,21 @@ public class FacultyProfileFragment extends Fragment {
                     FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
                     i++;
                 }
+                final Button editExpertise = view.findViewById(R.id.edit_expertise);
+                if (ExpertiseValue.size() == 0) {
+                    Log.d(TAG, "Expertise Value empty");
+                    editExpertise.setVisibility(View.GONE);
+                } else {
+                    Log.d(TAG, "Expertise Value not empty");
+                    editExpertise.setVisibility(View.VISIBLE);
+                }
+                editExpertise.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        editAreaExpertise();
+                    }
+                });
 
             }
 
@@ -189,8 +281,12 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
-        //Log.d(TAG,AreaNames.get(0));
+
     }
 
 
 }
+
+
+
+

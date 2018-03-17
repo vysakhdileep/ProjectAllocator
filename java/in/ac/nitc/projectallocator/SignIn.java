@@ -1,6 +1,10 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -166,24 +172,37 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
     public void send_reset_mail() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String email = mEmailField.getText().toString();
-        final String emailAddress = mEmailField.toString();
+
+        final String emailAddress = mEmailField.getText().toString();
+        Log.d(TAG,"Email forgot is "+emailAddress);
         auth.sendPasswordResetEmail(emailAddress)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent." + emailAddress);
-                        }
+                    public void onSuccess(Void aVoid) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
+                        alertDialog.setTitle("Forgot Password");
+                        alertDialog.setMessage("Email is sent");
+                        alertDialog.setIcon(R.drawable.user);
+
+                        alertDialog.show();
+                        Log.d(TAG, "Email sent." + emailAddress);
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"Error is "+e.getMessage());
+                AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
+                alertDialog.setTitle("Forgot Password");
+                alertDialog.setMessage("Error Occured");
+                alertDialog.setIcon(R.drawable.user);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
-        alertDialog.setTitle("Forgot Password");
-        alertDialog.setMessage("Email is sent");
-        alertDialog.setIcon(R.drawable.user);
+                alertDialog.show();
+            }
+        });
 
-        alertDialog.show();
+
+
+
 
     }
 
@@ -306,6 +325,18 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         startActivity(intent);
     }
 
+
+    public class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+            Toast.makeText(SignIn.this, "Connected to network", Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(getApplication(), MainActivity.class);
+            startActivity(myIntent);
+
+        }
+    }
 
 }
 

@@ -1,5 +1,6 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,12 +20,23 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
+
     private static final String TAG = "Test";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isLoggedIn();
+        Integer status= NetworkUtil.getConnectivityStatus(getApplicationContext());
+        if(status!= 0) {
+            isLoggedIn();
+        }
+        else
+        {
+            Log.d(TAG, "No connection");
+            Toast.makeText(MainActivity.this, "No connectivity.....",
+                    Toast.LENGTH_LONG).show();
+
+        }
 
 
     }
@@ -32,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();  // Always call the superclass method first
         Log.d(TAG, "Calling on resume");
-        Boolean connectivity =isOnline(getBaseContext());
-        if(connectivity == true) {
+       Integer status =NetworkUtil.getConnectivityStatus(getApplicationContext());
+        if(status != 0) {
             isLoggedIn();
         }
         else
@@ -46,19 +58,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        if(!isConnected) {
-
-            Log.d(TAG, "In Listener");
-            //show a No Internet Alert or Dialog
-
-        }else{
-            Log.d(TAG, "In Listener net exist");
-            Toast.makeText(MainActivity.this, "Connected to network", Toast.LENGTH_SHORT).show();
-            isLoggedIn();
-            // dismiss the dialog or refresh the activity
-        }
-    }
 
 
     private void isLoggedIn() {
@@ -135,13 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public boolean isOnline(Context context) {
 
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        //should check null because in airplane mode it will be null
-        return (netInfo != null && netInfo.isConnected());
-    }
 
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
@@ -161,4 +154,18 @@ public class MainActivity extends AppCompatActivity {
 
         mBackPressed = System.currentTimeMillis();
     }
+
+
+    public class NetworkChangeReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+
+             isLoggedIn();
+
+
+        }
+    }
+
 }
