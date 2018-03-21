@@ -1,33 +1,30 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,8 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import static android.provider.Telephony.Carriers.PASSWORD;
 
 
 public class SignIn extends AppCompatActivity implements View.OnClickListener {
@@ -72,7 +67,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         CheckBox mRemPwd;
 
         login = (Button) findViewById(R.id.login);
-        spinner = (ProgressBar)findViewById(R.id.loading);
+        spinner = (ProgressBar) findViewById(R.id.loading);
         spinner.setVisibility(View.GONE);
         mPasswordField = (EditText) findViewById(R.id.password);
         // get the show/hide password Checkbox
@@ -93,11 +88,12 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
-       
+
 
     }
+
     @Override
-    public void onClick (View view) {
+    public void onClick(View view) {
 
         login.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
@@ -106,7 +102,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    public void forgotPwd (View view) {
+    public void forgotPwd(View view) {
         Log.d(TAG, "forgotPassword");
         login.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
@@ -114,15 +110,16 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String email = mEmailField.getText().toString();
-        if(!email.isEmpty())
+        if (!email.isEmpty())
 
-        {Log.d(TAG, "email not empty");
+        {
+            Log.d(TAG, "email not empty");
             mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
                 @Override
                 public void onComplete(@NonNull Task<ProviderQueryResult> task) {
                     Log.d(TAG, "checking task");
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "Email sent. 1" );
+                        Log.d(TAG, "Email sent. 1");
                         ///////// getProviders().size() will return size 1. if email ID is available.
                         if (task.getResult().getProviders().size() == 1) {
                             login.setVisibility(View.VISIBLE);
@@ -144,7 +141,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                             forgot_pwd.setVisibility(View.VISIBLE);
 
                         }
-                    }else{
+                    } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
                         alertDialog.setTitle("Forgot Password");
                         alertDialog.setMessage("Invalid email");
@@ -159,42 +156,57 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 }
             });
 
-        }
-        else{
+        } else {
             AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
             alertDialog.setTitle("Forgot Password");
             alertDialog.setMessage("Please enter your email address");
             alertDialog.setIcon(R.drawable.user);
             Log.d(TAG, "User does not exist");
             alertDialog.show();
+            login.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
+            forgot_pwd.setVisibility(View.VISIBLE);
         }
     }
 
 
     public void send_reset_mail() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String email = mEmailField.getText().toString();
-        final String emailAddress = mEmailField.toString();
+
+        final String emailAddress = mEmailField.getText().toString();
+        Log.d(TAG,"Email forgot is "+emailAddress);
         auth.sendPasswordResetEmail(emailAddress)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent." + emailAddress);
-                        }
+                    public void onSuccess(Void aVoid) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
+                        alertDialog.setTitle("Forgot Password");
+                        alertDialog.setMessage("Email is sent");
+                        alertDialog.setIcon(R.drawable.user);
+
+                        alertDialog.show();
+                        Log.d(TAG, "Email sent." + emailAddress);
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG,"Error is "+e.getMessage());
+                AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
+                alertDialog.setTitle("Forgot Password");
+                alertDialog.setMessage("Error Occured");
+                alertDialog.setIcon(R.drawable.user);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
-        alertDialog.setTitle("Forgot Password");
-        alertDialog.setMessage("Email is sent");
-        alertDialog.setIcon(R.drawable.user);
+                alertDialog.show();
+            }
+        });
 
-        alertDialog.show();
+
+
+
 
     }
 
-    private void signIn( ) {
+    private void signIn() {
         String email = mEmailField.getText().toString();
         String password = mPasswordField.getText().toString();
         Log.d(TAG, "signIn:" + email);
@@ -202,7 +214,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
             login.setVisibility(View.VISIBLE);
             spinner.setVisibility(View.GONE);
             forgot_pwd.setVisibility(View.VISIBLE);
-            return ;
+            return;
         }
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -229,6 +241,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                                         Log.d(TAG, "Student does not exist");
                                     }
                                 }
+
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
                                     Log.d(TAG, "In onCancelled Student");
@@ -262,7 +275,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                         }
                     }
                 });
-        return ;
+        return;
     }
 
     private void StudentExist() {
@@ -305,13 +318,25 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
 
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+
+    public class NetworkChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+
+            Toast.makeText(SignIn.this, "Connected to network", Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(getApplication(), MainActivity.class);
+            startActivity(myIntent);
+
+        }
+    }
 
 }
 

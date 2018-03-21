@@ -1,20 +1,20 @@
 package in.ac.nitc.projectallocator;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,20 +28,23 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 
 public class FacultyProfileFragment extends Fragment {
 
     FirebaseUser user;
     String uid;
     Faculty facUser;
-    DatabaseReference FacultyRef,AreaRef;
+    DatabaseReference FacultyRef, AreaRef;
     ArrayList<String> FacultyExpertise = new ArrayList<>();  //Contain Expertise name of faculty
     ArrayList<String> ExpertiseKey = new ArrayList<>();      //Contain all Expertise Key
-    ArrayList<String> ExpertiseValue=new ArrayList<>();      //Contain all Expertise Value
-    Integer size =0;
+    ArrayList<String> ExpertiseValue = new ArrayList<>();      //Contain all Expertise Value
+    Integer size = 0;
 
     View view;
-    private static final String TAG = "Test";
+    private static final String TAG = "FacProfileFrag";
+    CheckBox checkBox;
 
     public FacultyProfileFragment() {
         // Required empty public constructor
@@ -72,18 +75,20 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
+
         Button editButton = view.findViewById(R.id.faculty_profile_edit);
-        editButton.setOnClickListener(new View.OnClickListener() {
+        editButton.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View view) {
                 final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
-                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_faculty_profile,null);
+                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_faculty_profile, null);
                 Log.d(TAG, "onClick:view inflate");
                 final EditText newPersonalEmail = (EditText) mView.findViewById(R.id.new_email);
                 final EditText Limit = (EditText) mView.findViewById(R.id.faculty_limit);
                 final EditText newphone = mView.findViewById(R.id.new_phonenumber);
-
-                Limit.setText(facUser.getLimit());
+                Limit.setText(String.valueOf(facUser.getLimit()));
                 newPersonalEmail.setText(facUser.getPersonalemail());
                 newphone.setText(facUser.getPhonenumber());
 
@@ -91,22 +96,19 @@ public class FacultyProfileFragment extends Fragment {
                 mBUilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() { // define the 'Cancel' button
                     public void onClick(DialogInterface dialog, int which) {
                         //Either of the following two lines should work.
-                        if(!Limit.getText().toString().isEmpty() &&
-                                !newPersonalEmail.getText().toString().isEmpty() && !newphone.getText().toString().isEmpty())
-                        {
+                        if (!Limit.getText().toString().isEmpty() &&
+                                !newPersonalEmail.getText().toString().isEmpty() && !newphone.getText().toString().isEmpty()) {
 
                             Log.d(TAG, "Limit" + Limit.getText().toString());
                             Log.d(TAG, "newMail:" + newPersonalEmail.getText().toString());
                             Log.d(TAG, "newPhone:" + newphone.getText());
-                            FacultyRef.child("Limit").setValue(Limit.getText().toString());
-                            FacultyRef.child("Phoneno").setValue(newphone.getText().toString());
+                            FacultyRef.child("limit").setValue(Integer.parseInt(Limit.getText().toString()));
+                            FacultyRef.child("phonenumber").setValue(newphone.getText().toString());
                             Toast.makeText(getActivity(), "Update Successful!!",
                                     Toast.LENGTH_SHORT).show();
 
 
-                        }
-                        else
-                        {
+                        } else {
                             Toast.makeText(getActivity(), "Please fill all empty values...",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -121,13 +123,80 @@ public class FacultyProfileFragment extends Fragment {
                     }
                 });
 
+
                 mBUilder.setView(mView);
                 mBUilder.show();
+
             }
         });
 
         return view;
     }
+
+    public void editAreaExpertise() {
+        Log.d(TAG, "Edit expertise...");
+        final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
+        final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_expertise, null);
+        LinearLayout linearMain;
+        linearMain = (LinearLayout) mView.findViewById(R.id.list_areas);
+        for (int i = 0; i < ExpertiseValue.size(); i++) {
+            checkBox = new CheckBox(getContext());
+            checkBox.setId(i);
+            checkBox.setText(ExpertiseValue.get(i));
+
+            Log.d(TAG, "Faculty size"+FacultyExpertise.size());
+            for (int j = 0; j < FacultyExpertise.size(); j++) {
+                Log.d(TAG, "Checking for checked");
+                if (ExpertiseValue.get(i).equals(FacultyExpertise.get(j))) {
+                    checkBox.setChecked(true);
+                    Log.d(TAG, "Match is"+ExpertiseValue.get(i) +"  "+FacultyExpertise.get(j));
+                }
+            }
+
+            linearMain.addView(checkBox);
+
+        }
+        final ArrayList<String> checked =new ArrayList<>();
+        Button submitareas = (Button) mView.findViewById(R.id.change_areas);
+        submitareas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checked.clear();
+                Integer i=0;
+                while(i<ExpertiseValue.size()) {
+                    Log.d(TAG,"In while loop");
+                    CheckBox c = (CheckBox) mView.findViewById(i);
+                    if(c.isChecked()) {
+                        checked.add(c.getText().toString());
+                    Log.d(TAG,"checked "+c.getText().toString());
+                    }
+                    i++;
+                }
+                AddAreasFirebase(checked);
+            }
+        });
+        mBUilder.setView(mView);
+        mBUilder.show();
+
+
+    }
+
+    public void AddAreasFirebase(ArrayList<String> checked)
+    {
+        FacultyRef.child("areas").getRef().removeValue();
+        for(int i=0;i<checked.size();i++)
+        {
+            for(int j=0;j<ExpertiseValue.size();j++)
+            {
+                if(ExpertiseValue.get(j).equals(checked.get(i)))
+                {
+                    FacultyRef.child("areas").child(i+"").setValue(ExpertiseKey.get(j));
+                    continue;
+                }
+            }
+        }
+    }
+
 
     public void getRequestData() {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -140,6 +209,7 @@ public class FacultyProfileFragment extends Fragment {
         FacultyRef = FirebaseDatabase.getInstance().getReference().child("Faculty").child(uid);
         AreaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
 
+        Log.d(TAG, "Fetching faculty ");
         FacultyRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,16 +219,14 @@ public class FacultyProfileFragment extends Fragment {
                     name.setText(facUser.getNameof());
                     email.setText(facUser.getPersonalemail());
                     phone_no.setText(facUser.getPhonenumber());
-                    limit.setText(facUser.getLimit());
-
+                    limit.setText(String.valueOf(facUser.getLimit()));
                     Log.d(TAG, "Name:" + facUser.getNameof());
                     Log.d(TAG, "login:" + facUser.getPersonalemail());
                     Log.d(TAG, "phoneno " + facUser.getPhonenumber());
                     size = 0;
-                    if(dataSnapshot.hasChild("Areas")) {
-                        Log.d(TAG, "Areas " + facUser.getAreas().size());
+                    if (dataSnapshot.hasChild("areas")) {
                         size = facUser.getAreas().size();
-                        Log.d(TAG, "Size is " + size);
+                        Log.d(TAG, "Area Size is " + size);
                     }
                 }
             }
@@ -170,28 +238,39 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
-        Log.d(TAG,"fetching expertise ");
-        AreaRef.addValueEventListener(new ValueEventListener(){
+        Log.d(TAG, "fetching expertise ");
+        AreaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
-                    Log.d(TAG,"Key is "+snapshot.getKey());
-                    Log.d(TAG, "Value is "+snapshot.getValue());
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Key is " + snapshot.getKey());
+                    Log.d(TAG, "Value is " + snapshot.getValue());
                     ExpertiseKey.add(snapshot.getKey());
                     ExpertiseValue.add(snapshot.getValue().toString());
                 }
-
-
 
                 int i = 0;
                 while ( i < size)
                 {
 
                             FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
-
-
                     i++;
                 }
+                final Button editExpertise = view.findViewById(R.id.edit_expertise);
+                if (ExpertiseValue.size() == 0) {
+                    Log.d(TAG, "Expertise Value empty");
+                    editExpertise.setVisibility(View.GONE);
+                } else {
+                    Log.d(TAG, "Expertise Value not empty");
+                    editExpertise.setVisibility(View.VISIBLE);
+                }
+                editExpertise.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        editAreaExpertise();
+                    }
+                });
 
             }
 
@@ -202,8 +281,12 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
-        //Log.d(TAG,AreaNames.get(0));
+
     }
 
 
 }
+
+
+
+

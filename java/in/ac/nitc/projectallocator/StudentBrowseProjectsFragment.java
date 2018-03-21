@@ -17,13 +17,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-public class StudentBrowseProjectsFragment extends Fragment{
+public class StudentBrowseProjectsFragment extends Fragment {
 
     final String TAG = "StuBrowseProjectFrag";
 
     DatabaseReference database, ProjectIdeasRef;
     ArrayList<ProjectIdeas> projects = new ArrayList<ProjectIdeas>();
-
 
 
     public StudentBrowseProjectsFragment() {
@@ -39,24 +38,23 @@ public class StudentBrowseProjectsFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d(TAG,"inside browse");
+        Log.d(TAG, "inside browse");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.project_list, container, false);
 
         database = FirebaseDatabase.getInstance().getReference();
         ProjectIdeasRef = database.child("ProjectIdeas");
-        Log.d(TAG,ProjectIdeasRef.toString());
+        Log.d(TAG, ProjectIdeasRef.toString());
 
 
         ProjectIdeasRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(TAG,"llalala");
-                if(!dataSnapshot.exists())
-                    Log.d(TAG,"NULL!!!");
-                for(DataSnapshot projectIdeasSnapshot : dataSnapshot.getChildren())
-                {
+                Log.d(TAG, "llalala");
+                if (!dataSnapshot.exists())
+                    Log.d(TAG, "NULL!!!");
+                for (DataSnapshot projectIdeasSnapshot : dataSnapshot.getChildren()) {
 
                     Log.d(TAG, "Receieved snapshot ");
                     projects.add(projectIdeasSnapshot.getValue(ProjectIdeas.class));
@@ -74,13 +72,11 @@ public class StudentBrowseProjectsFragment extends Fragment{
         });
 
 
-
         return view;
     }
 
-    public void  getProjects(ArrayList<ProjectIdeas> projectIdeas)
-    {
-        ProjectAdapter projectAdapter = new ProjectAdapter(getActivity(),R.color.background_color,projectIdeas);
+    public void getProjects(ArrayList<ProjectIdeas> projectIdeas) {
+        ProjectAdapter projectAdapter = new ProjectAdapter(getActivity(), R.color.background_color, projectIdeas);
 
         ListView listView = (ListView) getView().findViewById(R.id.list);
 

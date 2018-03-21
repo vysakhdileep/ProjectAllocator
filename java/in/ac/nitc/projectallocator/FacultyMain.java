@@ -1,37 +1,27 @@
 package in.ac.nitc.projectallocator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class FacultyMain extends AppCompatActivity {
-    private static final String TAG = "Test";
+    private static final String TAG = "FacultyMain";
     private DatabaseReference mDatabase;
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -46,7 +36,7 @@ public class FacultyMain extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -55,24 +45,17 @@ public class FacultyMain extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        if(!isConnected) {
 
+            Log.d(TAG, "In Listener");
+            //show a No Internet Alert or Dialog
+            Toast.makeText(getBaseContext(), "No net connectivity", Toast.LENGTH_SHORT).show();
 
-
-
-
-    private static long back_pressed;
-    @Override
-    public void onBackPressed(){
-        if (back_pressed + 2000 > System.currentTimeMillis()){
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            //super.onBackPressed();
-        }
-        else{
-            Toast.makeText(getBaseContext(), "Press once again to exit", Toast.LENGTH_SHORT).show();
-            back_pressed = System.currentTimeMillis();
+        }else{
+            Log.d(TAG, "In Listener net exist");
+            Toast.makeText(getBaseContext(), "Connected to network", Toast.LENGTH_SHORT).show();
+            // dismiss the dialog or refresh the activity
         }
     }
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -108,13 +91,40 @@ public class FacultyMain extends AppCompatActivity {
         adapter.addFragment(new FacultyProfileFragment(), (getString(R.string.facultyprofile)));
         adapter.addFragment(new ViewRequestFragment(), (getString(R.string.viewrequest)));
         adapter.addFragment(new AddFacultyProjectFragment(), (getString(R.string.add_faculty_project)));
+        adapter.addFragment(new FacultyProjectFragment(),(getString(R.string.project_list)));
         viewPager.setAdapter(adapter);
     }
 
 
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
+    @Override
+    public void onBackPressed()
+    {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis())
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            return;
+        }
+        else { Toast.makeText(getBaseContext(), "Tap back button in order to exit", Toast.LENGTH_SHORT).show(); }
 
+        mBackPressed = System.currentTimeMillis();
+    }
 
+    public class NetworkChangeReceiver extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            Log.d(TAG, "Calling on network change");
+            Toast.makeText(FacultyMain.this, "Connected to network", Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(getApplication(), MainActivity.class);
+            startActivity(myIntent);
+
+        }
+    }
 
 }
 

@@ -1,13 +1,12 @@
 package in.ac.nitc.projectallocator;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,71 +17,55 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 public class ViewRequestFragment extends Fragment {
 
-    private static final String TAG = "Test";
-    private DatabaseReference mDatabase;
-    ArrayList<request> requestList;
-    ArrayList<String> requestFacultyprojects;
-         public ViewRequestFragment() {
+    private static final String TAG = "ViewRequestFrag";
+    private DatabaseReference mDatabase, requestQueueRef, areaExpertiseRef;
+    View view;
+    ArrayList<RequestQueue> requestList = new ArrayList<>();
+    ArrayList<RequestQueue> requestFacultyList = new ArrayList<>();
+    ArrayList<String> areas;
+    HashMap<String, String> areaExpertise = new HashMap<>();
+
+    public ViewRequestFragment() {
         // Required empty public constructor
-        }
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-       @Override
-        public void onCreate(Bundle savedInstanceState){
-            super.onCreate(savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        Log.d(TAG, "start getRequest()");
+        view = inflater.inflate(R.layout.fragment_view_request, container, false);
+        getRequestData();
+        Log.d(TAG, "end getRequest()");
 
+        return view;
+    }
 
-        }
-
-        @Override
-        public View onCreateView (LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState){
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_view_request, container, false);
-        }
-
-    public void getRequestData()
-    {
+    public void getRequestData() {
         Log.d(TAG, "Requesting ");
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        requestQueueRef = mDatabase.child("RequestQueue");
+        areaExpertiseRef = mDatabase.child("AreaExpertise");
 
-        DatabaseReference requestQueueRef = mDatabase.child("RequestQueue");
-        final ArrayList<request> requestArrayList = new ArrayList<>();
-
-
-        ValueEventListener requestListener = new ValueEventListener()
-        {
+        areaExpertiseRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for(DataSnapshot requestsnapshot : dataSnapshot.getChildren())
-                {
-                    Log.d(TAG, "Receieved snapshot ");
-                    requestList.add(requestsnapshot.getValue(request.class));
-
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                areaExpertise.clear();
+                if (!dataSnapshot.exists())
+                    Log.d(TAG, "NULL!!!");
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Received snapshot AreaExpertise");
+                    areaExpertise.put(requestSnapshot.getKey(), requestSnapshot.getValue(String.class));
                 }
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                int i=0;
-                final String uid = user.getUid();
-                while(i < requestList.size())
-                {
-                    int j=0;
-                    while(j < requestList.get(i).faculties.size())
-                    {
-                        if(uid.equals(requestList.get(i).faculties.get(j).toString()))
-                        {
-                            requestFacultyprojects.add(requestList.get(i).faculties.get(j).toString());
-                        }
-                        j++;
-                    }
-                    i++;
-                }
-
             }
 
             @Override
@@ -91,13 +74,56 @@ public class ViewRequestFragment extends Fragment {
                 Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
                 // ...
             }
+        });
 
-        };
+        requestQueueRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                requestList.clear();
+                requestFacultyList.clear();
+                if (!dataSnapshot.exists())
+                    Log.d(TAG, "NULL!!!");
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "Received snapshot RequestQueue");
+                    requestList.add(requestSnapshot.getValue(RequestQueue.class));
+                }
 
-        requestQueueRef.addValueEventListener(requestListener);
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                int i = 0;
+                final String uid = user.getUid();
+                while (i < requestList.size()) {
+                    int j = 0;
+                    if (requestList.get(i).faculties != null && requestList.get(i).status.equals("PENDING"))
+                        j = requestList.get(i).faculties.size();
+                    if (j != 0 && uid.equals(requestList.get(i).faculties.get(j - 1))) {
+                        areas = new ArrayList<>();
+                        for (int k = 0; k < requestList.get(i).getAreas().size(); k++) {
+                            areas.add(areaExpertise.get(requestList.get(i).getAreas().get(k)));
+                        }
+                        requestList.get(i).areas = areas;
+                        requestFacultyList.add(requestList.get(i));
+                    }
+                    i++;
+                }
+                getRequest(requestFacultyList);
+            }
 
-
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
     }
+
+    public void getRequest(ArrayList<RequestQueue> requestQueue) {
+        RequestAdapter requestAdapter = new RequestAdapter(getActivity(), R.layout.request_list_item, requestQueue);
+        ListView listView = (ListView) view.findViewById(R.id.listView1);
+        listView.setAdapter(requestAdapter);
     }
+
+
+}
 
 
