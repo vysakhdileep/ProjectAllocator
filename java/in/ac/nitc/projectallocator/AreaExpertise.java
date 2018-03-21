@@ -7,20 +7,20 @@ import java.util.ArrayList;
  */
 
 public class AreaExpertise {
-    private ArrayList<String> areas;
+    private String area;
 
     public AreaExpertise(){
 
     }
     public AreaExpertise(ArrayList<String> areas) {
-        this.areas = areas;
+        this.area = area;
     }
 
-    public ArrayList<String> getAreas() {
-        return areas;
+    public String getAreas() {
+        return area;
     }
 
-    public void setAreas(ArrayList<String> areas) {
-        this.areas = areas;
+    public void setAreas(String areas) {
+        this.area = area;
     }
 }

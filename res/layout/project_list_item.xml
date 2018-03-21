@@ -1,21 +1,26 @@
 <LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="ProjectName"
         android:id="@+id/project_list_projname"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="FacultyName"
         android:id="@+id/project_list_projFacId"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Areas"
         android:id="@+id/project_list_areas"/>
 
 

@@ -84,8 +84,8 @@ public class FacultyProfileFragment extends Fragment {
                 final EditText newphone = mView.findViewById(R.id.new_phonenumber);
 
                 Limit.setText(facUser.getLimit());
-                newPersonalEmail.setText(facUser.getEmail());
-                newphone.setText(facUser.getPhoneno());
+                newPersonalEmail.setText(facUser.getPersonalemail());
+                newphone.setText(facUser.getPhonenumber());
 
 
                 mBUilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() { // define the 'Cancel' button
@@ -146,18 +146,18 @@ public class FacultyProfileFragment extends Fragment {
                 if (dataSnapshot.exists()) {
 
                     facUser = dataSnapshot.getValue(Faculty.class);
-                    name.setText(facUser.getName());
-                    email.setText(facUser.getEmail());
-                    phone_no.setText(facUser.getPhoneno());
+                    name.setText(facUser.getNameof());
+                    email.setText(facUser.getPersonalemail());
+                    phone_no.setText(facUser.getPhonenumber());
                     limit.setText(facUser.getLimit());
 
-                    Log.d(TAG, "Name:" + facUser.getName());
-                    Log.d(TAG, "login:" + facUser.getEmail());
-                    Log.d(TAG, "phoneno " + facUser.getPhoneno());
+                    Log.d(TAG, "Name:" + facUser.getNameof());
+                    Log.d(TAG, "login:" + facUser.getPersonalemail());
+                    Log.d(TAG, "phoneno " + facUser.getPhonenumber());
                     size = 0;
                     if(dataSnapshot.hasChild("Areas")) {
-                        Log.d(TAG, "Areas " + facUser.areas.size());
-                        size = facUser.areas.size();
+                        Log.d(TAG, "Areas " + facUser.getAreas().size());
+                        size = facUser.getAreas().size();
                         Log.d(TAG, "Size is " + size);
                     }
                 }
@@ -187,7 +187,7 @@ public class FacultyProfileFragment extends Fragment {
                 while ( i < size)
                 {
 
-                            FacultyExpertise.add(dataSnapshot.child(facUser.areas.get(i)).getValue().toString());
+                            FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
 
 
                     i++;

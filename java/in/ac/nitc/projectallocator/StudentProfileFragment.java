@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -60,7 +61,6 @@ public class StudentProfileFragment extends Fragment{
 
         final TextView name = view.findViewById(R.id.textview_student_name);
         final TextView email = view.findViewById(R.id.textview_student_email);
-        final TextView loginid = view.findViewById(R.id.textview_student_login_email);
         final TextView phone = view.findViewById(R.id.textview_student_phonenumber);
         final TextView rollnum = view.findViewById(R.id.textview_student_rollnumber);
 
@@ -125,7 +125,7 @@ public class StudentProfileFragment extends Fragment{
                             Log.d(TAG, "newMail:" + newPersonalEmail.getText().toString());
                             Log.d(TAG, "newPhone:" + newphone.getText());
 
-                            StudentRef.child("Name").setValue(newName.getText().toString());
+                            StudentRef.child("nameof").setValue(newName.getText().toString());
                             StudentRef.child("personalemail").setValue(newPersonalEmail.getText().toString());
                             StudentRef.child("phonenumber").setValue(newphone.getText().toString());
                             Toast.makeText(getActivity(), "Update Successful!!",

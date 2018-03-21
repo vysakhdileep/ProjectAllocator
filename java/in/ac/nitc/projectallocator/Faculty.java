@@ -7,45 +7,53 @@ import java.util.ArrayList;
  */
 
 public class Faculty {
-    private String Name;
-    private String Email;
-    private String Phoneno;
-    private String Limit;
-    public ArrayList<String> areas;
 
+    private int count;
+    private int limit;
+    private String nameof;
+    private String personalemail;
+    private String phonenumber;
+    private String uid;
+    private ArrayList<String> areas;
 
-    public Faculty(String name, String email, String phoneno, String limit, ArrayList<String> areas) {
-        Name = name;
-        Email = email;
-        Phoneno = phoneno;
-        Limit = limit;
+    public Faculty(int count, int limit, String nameof, String personalemail, String phonenumber, String uid, ArrayList<String> areas) {
+        this.count = count;
+        this.limit = limit;
+        this.nameof = nameof;
+        this.personalemail = personalemail;
+        this.phonenumber = phonenumber;
+        this.uid = uid;
         this.areas = areas;
-    }
-
-    public Faculty() {
-
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-
-    public String getEmail() {
-        return Email;
-    }
-
-
-    public String getPhoneno() {
-        return Phoneno;
-    }
-
-
-    public String getLimit() {
-        return Limit;
     }
 
     public ArrayList<String> getAreas() {
         return areas;
+    }
+
+    public Faculty() {
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public String getNameof() {
+        return nameof;
+    }
+
+    public String getPersonalemail() {
+        return personalemail;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public String getUid() {
+        return uid;
     }
 }
