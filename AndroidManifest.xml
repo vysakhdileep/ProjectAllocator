@@ -38,6 +38,7 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        <activity android:name=".ArchiveActivity"/>
         <activity android:name=".FacultyMain" />
         <activity android:name=".StudentMain" />
         <activity android:name=".SignIn" />

@@ -82,7 +82,7 @@ public class Faculty {
         return uid;
     }
 
-    public String getUid() {
-        return uid;
+    public ArrayList<String> getAreas() {
+        return areas;
     }
 }
