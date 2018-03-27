@@ -3,7 +3,6 @@ package in.ac.nitc.projectallocator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-
-import static android.content.ContentValues.TAG;
 
 
 public class FacultyProfileFragment extends Fragment {
@@ -139,6 +135,7 @@ public class FacultyProfileFragment extends Fragment {
         final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_expertise, null);
         LinearLayout linearMain;
         linearMain = (LinearLayout) mView.findViewById(R.id.list_areas);
+        linearMain.removeAllViews();
         for (int i = 0; i < ExpertiseValue.size(); i++) {
             checkBox = new CheckBox(getContext());
             checkBox.setId(i);
