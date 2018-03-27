@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 
 public class RequestAdapter extends ArrayAdapter<RequestQueue> {
     private static final String TAG = "RequestAdapter";
-    private DatabaseReference mDatabase, requestDatabase, acceptDatabase;
+    private DatabaseReference mDatabase, requestDatabase, acceptRequest;
 
     public RequestAdapter(@NonNull Context context, int resource, ArrayList<RequestQueue> objects) {
         super(context, resource, objects);
@@ -47,18 +46,17 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                     R.layout.request_list_item, parent, false);
         }
 
-        RequestQueue currRequest = getItem(position);
+        final RequestQueue currRequest = getItem(position);
         Log.d(TAG, "position: " + position);
 
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
-        requestGroup.setText(currRequest.getGroup());
+        requestGroup.setText(currRequest.getGroupid());
 
         TextView requestTopic = (TextView) listItemView.findViewById(R.id.request_topic);
         requestTopic.setText(currRequest.getTopic());
 
         TextView requestDescription = (TextView) listItemView.findViewById(R.id.request_description);
         requestDescription.setText(currRequest.getDescription());
-
 
 
         Log.d(TAG, "Area size: " + currRequest.getAreas().size());
@@ -76,10 +74,26 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
 
                 mBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        int k = position + 1;
                         mDatabase = FirebaseDatabase.getInstance().getReference();
                         String accept = "ACCEPTED";
-                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(accept);
+                        mDatabase.child("RequestQueue").child(currRequest.requestid).child("status").setValue(accept);
+
+                        acceptRequest = FirebaseDatabase.getInstance().getReference().child("AcceptProject");
+                        String key = acceptRequest.push().getKey();
+
+                        acceptRequest.child(key).child("description").setValue(currRequest.description);
+                        acceptRequest.child(key).child("faculty").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        acceptRequest.child(key).child("groupid").setValue(currRequest.groupid);
+                        acceptRequest.child(key).child("topic").setValue(currRequest.topic);
+                        acceptRequest.child(key).child("description").setValue(" ");
+
+                        Integer i = 0;
+                        while (i < currRequest.areas.size()) {
+                            acceptRequest.child(key).child("areas").child(i.toString()).setValue(currRequest.areas.get(i));
+                            i++;
+                        }
+
+                        mDatabase.child("RequestQueue").child(currRequest.requestid).removeValue();
 
                         FirebaseMessageService.Listening(accept);
                         Toast.makeText(getContext(), "Project Accepted",
@@ -119,19 +133,16 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!dataSnapshot.exists())
                                     Log.d(TAG, "NULL!!!");
-                                long l = dataSnapshot.child(String.valueOf(k)).child("faculties").getChildrenCount();
-                                if (l > 0 && dataSnapshot.child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
-                                    mDatabase.child("RequestQueue").child(String.valueOf(k)).child("faculties").child(String.valueOf(l - 1)).removeValue();
+                                long l = dataSnapshot.child(currRequest.requestid).child("faculties").getChildrenCount();
+                                if (l > 0 && dataSnapshot.child(currRequest.requestid).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
+                                    mDatabase.child("RequestQueue").child(currRequest.requestid).child("faculties").child(String.valueOf(l - 1)).removeValue();
                                     if (l == 1) {
                                         String reject = "REJECTED";
-                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).child("status").setValue(reject);
-                                        mDatabase.child("RequestQueue").child(String.valueOf(k)).removeValue();
+                                        mDatabase.child("RequestQueue").child(currRequest.requestid).child("status").setValue(reject);
+                                        mDatabase.child("RequestQueue").child(currRequest.requestid).removeValue();
                                         FirebaseMessageService.Listening(reject);
-
                                     }
-
                                 }
-
                             }
 
                             @Override

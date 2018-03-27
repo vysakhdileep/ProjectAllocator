@@ -10,21 +10,23 @@ public class RequestQueue {
     ArrayList<String> areas;
     ArrayList<String> faculties;
     String status;
-    String group;
+    String groupid;
     String topic;
     String description;
+    String requestid;
 
     public RequestQueue() {
     }
 
 
-    public RequestQueue(ArrayList<String> areas, ArrayList<String> faculties, String status, String group, String topic, String description) {
+    public RequestQueue(ArrayList<String> areas, ArrayList<String> faculties, String status, String groupid, String topic, String description, String requestid) {
         this.areas = areas;
         this.faculties = faculties;
         this.status = status;
-        this.group = group;
+        this.groupid = groupid;
         this.topic = topic;
         this.description = description;
+        this.requestid = requestid;
     }
 
     public ArrayList<String> getAreas() {
@@ -51,16 +53,25 @@ public class RequestQueue {
         this.status = status;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupid() {
+        return groupid;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
     }
 
     public String getTopic() {
         return topic;
+    }
+
+    public void setRequestid(String requestid) {
+        this.requestid = requestid;
+    }
+
+    public String getRequestid() {
+
+        return requestid;
     }
 
     public void setTopic(String topic) {

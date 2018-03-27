@@ -1,7 +1,5 @@
 package in.ac.nitc.projectallocator;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +39,7 @@ public class FacultyProjectFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-       final  View view = inflater.inflate(R.layout.fragment_faculty_project, container, false);
+        final View view = inflater.inflate(R.layout.fragment_faculty_project, container, false);
         AcceptProjects = FirebaseDatabase.getInstance().getReference().child("AcceptProject");
 
         AcceptProjects.addValueEventListener(new ValueEventListener() {
@@ -53,17 +49,18 @@ public class FacultyProjectFragment extends Fragment {
                     Log.d(TAG, "NULL!!!");
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 final String uid = user.getUid();
+                ProjectList.clear();
                 for (DataSnapshot projectSnapshot : dataSnapshot.getChildren()) {
                     if (projectSnapshot.child("faculty").getValue().equals(uid)) {
                         ProjectList.add(projectSnapshot.getValue(AcceptProject.class));
-                        Log.d(TAG," faculty project list"+ProjectList.size());
+                        Log.d(TAG, " faculty project list" + ProjectList.size());
 
                     }
 
                 }
-                Log.d(TAG," Calling Adapter");
-                ListView ListField =(ListView) view.findViewById(R.id.faculty_project);
-                ListField.setAdapter(new AcceptProjectAdapter(getContext(),R.layout.fragment_faculty_project ,ProjectList));
+                Log.d(TAG, " Calling Adapter");
+                ListView ListField = (ListView) view.findViewById(R.id.faculty_project);
+                ListField.setAdapter(new AcceptProjectAdapter(getContext(), R.layout.fragment_faculty_project, ProjectList));
             }
 
             @Override
@@ -71,7 +68,6 @@ public class FacultyProjectFragment extends Fragment {
 
             }
         });
-
 
 
         return view;
