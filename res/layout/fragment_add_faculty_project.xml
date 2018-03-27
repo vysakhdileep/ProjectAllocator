@@ -8,11 +8,6 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-
-
-
-
-
     <Button
         android:id="@+id/submit_project"
         android:layout_width="88dp"
@@ -26,13 +21,22 @@
         app:layout_constraintTop_toBottomOf="@+id/name"
         app:layout_constraintVertical_bias="1.0" />
 
-        <EditText
-            android:id="@+id/name_project"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Project Name"
-            android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/description_project"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="15"
+        android:hint="Description Name"
+        app:layout_constraintBottom_toBottomOf="@id/name_project"
+        android:inputType="textPersonName" />
+    <EditText
+        android:id="@+id/name_project"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Project Name"
+        android:inputType="textPersonName" />
 
     <LinearLayout
         android:orientation="vertical"

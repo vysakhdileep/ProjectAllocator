@@ -8,15 +8,19 @@ import java.util.ArrayList;
 
 public class AcceptProject {
     String faculty;
+    String topic;
     String groupid;
+    String description;
     ArrayList<String> areas;
 
     public AcceptProject() {
     }
 
-    public AcceptProject(String faculty, String groupid, ArrayList<String> areas) {
+    public AcceptProject(String faculty, String topic, String groupid, String description, ArrayList<String> areas) {
         this.faculty = faculty;
+        this.topic = topic;
         this.groupid = groupid;
+        this.description = description;
         this.areas = areas;
     }
 
@@ -28,12 +32,28 @@ public class AcceptProject {
         this.faculty = faculty;
     }
 
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
     public String getGroupid() {
         return groupid;
     }
 
     public void setGroupid(String groupid) {
         this.groupid = groupid;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ArrayList<String> getAreas() {

@@ -53,6 +53,14 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
         requestGroup.setText(currRequest.getGroup());
 
+        TextView requestTopic = (TextView) listItemView.findViewById(R.id.request_topic);
+        requestTopic.setText(currRequest.getTopic());
+
+        TextView requestDescription = (TextView) listItemView.findViewById(R.id.request_description);
+        requestDescription.setText(currRequest.getDescription());
+
+
+
         Log.d(TAG, "Area size: " + currRequest.getAreas().size());
         for (int i = 0; i < currRequest.getAreas().size(); i++)
             printArea((LinearLayout) listItemView.findViewById(R.id.request_list_areas), currRequest.getAreas().get(i));

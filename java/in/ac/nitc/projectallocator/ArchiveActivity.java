@@ -342,10 +342,10 @@ public class ArchiveActivity extends AppCompatActivity {
                                             // ...
 
                                             Log.e("firebase ",";local tem file created  created " +temp.toString());
-                                            Toast.makeText(getApplicationContext(), "Downloaded Sucessfully", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Downloaded Successfully", Toast.LENGTH_LONG).show();
                                             Notification n  = new Notification.Builder(getApplicationContext())
                                                     .setContentTitle("Download")
-                                                    .setContentText("Download completed sucessfully ")
+                                                    .setContentText("Download completed successfully ")
                                                     .setSmallIcon(R.drawable.user)
 
                                                     .setAutoCancel(true)

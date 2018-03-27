@@ -69,6 +69,9 @@ public class AddFacultyProjectFragment extends Fragment {
                 EditText project_name = (EditText) view.findViewById(R.id.name_project);
 
                 String temp = project_name.getText().toString();
+                EditText project_description = (EditText) view.findViewById(R.id.description_project);
+
+                String temp2 = project_description.getText().toString();
                 if(temp == null)
                 {
                     Toast.makeText(getContext(), "Enter valid Project name",
@@ -85,7 +88,8 @@ public class AddFacultyProjectFragment extends Fragment {
                     ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
                     String key = ProjectIdeas.push().getKey();
 
-                    ProjectIdeas.child(key).child("Name").setValue(temp);
+                    ProjectIdeas.child(key).child("nameof").setValue(temp);
+                    ProjectIdeas.child(key).child("description").setValue(temp2);
                     ProjectIdeas.child(key).child("facultyid").setValue(uid);
 
                     Integer t =0;
