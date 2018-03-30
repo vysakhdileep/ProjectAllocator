@@ -149,107 +149,21 @@ public class ProjectAdapter extends ArrayAdapter<ProjectIdeas> {
 
             projarea.addView(ll);
         }
-
-        checkGrpId(areas,listItemView,currProject);
     }
-
-    private void checkGrpId(final ArrayList<String> areas, LinearLayout listItemView, final ProjectIdeas currProject)
-    {
-        FirebaseUser user;
-        String StuUid;
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        StuUid = user.getUid();
-        Log.d(TAG,"area0!!!!!!!!!!!!!"+areas.get(0));
-
-        DatabaseReference StuRef = FirebaseDatabase.getInstance().getReference().child("Student").child(StuUid);
-        final View finalListItemView = listItemView;
-        StuRef.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ShowToast")
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Student student = dataSnapshot.getValue(Student.class);
-                String stuGrpId = student.getGroupid();
-                if(stuGrpId != null)
-                {
-                    Log.d(TAG,"Student GID!!!!!!!!!!!->" + stuGrpId);
-                        getAreaId(areas,finalListItemView,stuGrpId,currProject);
-                }
-                else
-                    Toast.makeText(getContext(),"Please Create Group First!!!!",Toast.LENGTH_LONG);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
-    private void getAreaId(final ArrayList<String> areas, final View finalListItemView, final String stuGrpId, final ProjectIdeas currProject)
-    {
-        DatabaseReference areaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
-        areaRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String area;
-                int i;
-                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
-                    area = areaSnapshot.getValue(String.class);
-                    for (i = 0; i < areas.size(); i++) {
-                        if (Objects.equals(area, areas.get(i))) {
-                            areas.set(i, areaSnapshot.getKey());
-                        }
-                    }
-                }
-                placeNewRequest(areas, (LinearLayout) finalListItemView,stuGrpId,currProject);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void placeNewRequest(final ArrayList<String> areaId, View finalListItemView, final String stuGrpId, final ProjectIdeas currProject)
-    {
-        Log.d(TAG,"INSIDE placeNewReq");
-        Log.d(TAG,"outside area0?????????->"+ areaId.get(0));
-        Button requestButton = finalListItemView.findViewById(R.id.request_facProject);
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                final View mView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_place_fac_proj,null);
-
-                alert.setPositiveButton("Place Request", new DialogInterface.OnClickListener()
-                {
-                    int j;
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        Log.d(TAG,"Inside ONCLICK ACCEPT");
-                        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
-                        final String key =  requestRef.push().getKey();
-                        for(j=0;j<areaId.size();j++)
-                        {
-                            requestRef.child(key).child("areas").child(String.valueOf(j)).setValue(areaId.get(j));
-                            Log.d(TAG,"area " + j +"**************" + areaId.get(j));
-                        }
-
-                        requestRef.child(key).child("description").setValue(currProject.getDescription());
-                        requestRef.child(key).child("faculties").child("0").setValue(currProject.getFacultyid());
-                        requestRef.child(key).child("groupid").setValue(stuGrpId);
-                        requestRef.child(key).child("status").setValue("PENDING");
-                        requestRef.child(key).child("topic").setValue(currProject.getTopic());
-                    }
-                });
-                alert.setView(mView);
-                alert.show();
-            }
-        });
-    }
+//
+//    private void checkGrpId(final ArrayList<String> areas, LinearLayout listItemView, final ProjectIdeas currProject)
+//    {
+//
+//
+//    }
+//
+//    private void getAreaId(final ArrayList<String> areas, final View finalListItemView, final String stuGrpId, final ProjectIdeas currProject)
+//    {
+//
+//    }
+//
+//    private void placeNewRequest(final ArrayList<String> areaId, View finalListItemView, final String stuGrpId, final ProjectIdeas currProject)
+//    {
+//
+//    }
 }

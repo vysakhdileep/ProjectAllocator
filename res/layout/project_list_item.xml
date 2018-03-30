@@ -74,12 +74,12 @@
         android:orientation="vertical"
         android:id="@+id/project_list_areas"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Place Request"
-        android:layout_gravity="center"
-        android:id="@+id/request_facProject"/>
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Place Request"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:id="@+id/request_facProject"/>-->
 
 
 </LinearLayout>
