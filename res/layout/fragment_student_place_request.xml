@@ -1,10 +1,15 @@
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="in.ac.nitc.projectallocator.StudentBrowseProjectsFragment">
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        >
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +25,10 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:layout_marginLeft="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/place_request_linear_layout"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,13 +39,34 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Topic Name:"
+                android:text="@string/topic_name"
                 android:textSize="20dp"
                 android:padding="10dp"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Enter topic here"/>
+                android:hint="@string/enter_topic_here"
+                android:id="@+id/project_topic_name"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/brief_description"
+                android:textSize="20dp"
+                android:padding="10dp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/enter_brief_description"
+                android:id="@+id/project_topic_desc"/>
 
         </LinearLayout>
 
@@ -52,7 +81,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Area of Interest:"
+                android:text="@string/select_area_of_interest"
                 android:padding="10dp"
                 android:textSize="15dp"
                 android:id="@+id/button_area_of_interest"
@@ -72,7 +101,7 @@
             <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Faculty Preference:"
+            android:text="@string/select_faculty_preference"
             android:padding="10dp"/>
 
             <Spinner
@@ -124,24 +153,130 @@
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+"
+            android:text="@string/plus_sign"
             android:padding="10dp"
             android:id="@+id/button_moreFac"/>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/place_request"
+            android:padding="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:id="@+id/button_place_request"
+            android:layout_toRightOf="@+id/button_moreFac"
+            />
+        </RelativeLayout>
     </LinearLayout>
 
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Place Request"
-        android:padding="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:id="@+id/button_place_request"
-        />
+        android:id="@+id/existing_request_linear_layout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Topic Name"
+                android:textSize="20dp"
+                android:padding="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:padding="10dp"
+                android:id="@+id/show_topic"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/brief_description"
+                android:textSize="20dp"
+                android:padding="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:padding="10dp"
+                android:id="@+id/show_desc"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATUS:"
+                android:textSize="20dp"
+                android:padding="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:padding="10dp"
+                android:id="@+id/show_status"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/show_faculty">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Faculty Preference:"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/show_areas">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Project Areas:"
+                android:padding="10dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>
+

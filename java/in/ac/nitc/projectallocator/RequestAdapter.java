@@ -52,6 +52,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
         requestGroup.setText(currRequest.getGroupid());
 
+
         TextView requestTopic = (TextView) listItemView.findViewById(R.id.request_topic);
         requestTopic.setText(currRequest.getTopic());
 

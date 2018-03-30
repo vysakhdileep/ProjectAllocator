@@ -66,7 +66,7 @@ public class StudentMain extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new StudentProfileFragment(), "Profile");
         adapter.addFragment(new StudentBrowseProjectsFragment(), "Browse Projects");
-        adapter.addFragment(new StudentPlaceRequestFragment(), "Place Request");
+        adapter.addFragment(new StudentPlaceRequestFragment(), "Project Request");
         viewPager.setAdapter(adapter);
     }
 

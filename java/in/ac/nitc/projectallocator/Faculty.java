@@ -85,4 +85,6 @@ public class Faculty {
     public ArrayList<String> getAreas() {
         return areas;
     }
+
+
 }

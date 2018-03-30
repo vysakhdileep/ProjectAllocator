@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * Created by jsnkrm on 25/02/18.
@@ -37,8 +39,10 @@ import java.util.HashSet;
 public class StudentPlaceRequestFragment extends Fragment {
 
     final String TAG = "StuPlaceRequestFrag";
-
+    boolean hasProject = false;
     FirebaseUser user;
+    String Facpref1,Facpref2,Facpref3,Facpref4,Facpref5;
+    RequestQueue newRequest = new RequestQueue();
     String uid;
     Student stu;
     DatabaseReference database, StudentRef, StuRef,GroupRef,AreaRef;
@@ -99,12 +103,13 @@ public class StudentPlaceRequestFragment extends Fragment {
                     {
                         Log.d(TAG,"empty groupid!!");
                         createGroup();
-                        getAreaOfInerest();
 
                     }
                     else
                     {
-                        getAreaOfInerest();
+                        Log.d(TAG,"groupid====" + stu.getGroupid());
+                        isHasProject();
+
                     }
 
 
@@ -124,6 +129,13 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     void createGroup()
     {
+        Log.d(TAG,"Inside CreateGroup");
+
+        View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
+        linearLayout.setVisibility(View.GONE);
+
+        View ll = getView().findViewById(R.id.existing_request_linear_layout);
+        ll.setVisibility(View.GONE);
 
         final Button createGroupButton = getView().findViewById(R.id.create_group_button);
 
@@ -133,7 +145,6 @@ public class StudentPlaceRequestFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Log.d(TAG,"Inside CreateGroup");
 
                 final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_create_group,null);
@@ -244,7 +255,7 @@ public class StudentPlaceRequestFragment extends Fragment {
 
                         GroupRef = FirebaseDatabase.getInstance().getReference().child("Group");
                         final String key =  GroupRef.push().getKey();
-                        GroupRef.child(key).child("0").setValue(stu.getRollnumber());
+                        GroupRef.child(key).child("0").setValue(stu.getUid());
                         Log.d(TAG,"new group Key:" + key);
 
                         StuRef = database.child("Student");
@@ -263,10 +274,11 @@ public class StudentPlaceRequestFragment extends Fragment {
                                         Log.d(TAG,"stuid:" + stu1.getUid());
                                         FirebaseDatabase.getInstance().getReference().
                                                 child("Student").child(stu1.getUid()).child("groupid").setValue(key);
-                                        GroupRef.child(key).child(String.valueOf(finalI)).setValue(stu1.getRollnumber());
+                                        GroupRef.child(key).child(String.valueOf(finalI)).setValue(stu1.getUid());
                                         GroupMembers.remove(stu1.getRollnumber());
                                     }
                                 }
+                                getAreaOfInterest();
                             }
 
                             @Override
@@ -286,11 +298,18 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
     }
 
-    void getAreaOfInerest()
+    void getAreaOfInterest()
     {
-        final Button createGroupButton = getView().findViewById(R.id.create_group_button);
+        Log.d(TAG,"INSIDE getAreaOfInterest");
 
+        final Button createGroupButton = getView().findViewById(R.id.create_group_button);
         createGroupButton.setVisibility(View.GONE);
+
+        View ll = getView().findViewById(R.id.existing_request_linear_layout);
+        ll.setVisibility(View.GONE);
+
+        View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
+        linearLayout.setVisibility(View.VISIBLE);
 
         Button moreFac = (Button) getView().findViewById(R.id.button_moreFac);
         final Spinner spinnerFac1 = getView().findViewById(R.id.spinner_fac1);
@@ -368,6 +387,7 @@ public class StudentPlaceRequestFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which)
                     {
 
+                        GroupAreaId.clear();
                         Log.d(TAG,"size: " + areaExpertise.size());
                             int k =0;
                         while(k < areaExpertise.size())
@@ -399,6 +419,7 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     private void getRequiredFac(final ArrayList<String> areaId)
     {
+        final ArrayList<String> requiredFacId = new ArrayList<>();
         DatabaseReference facRef;
         facRef = FirebaseDatabase.getInstance().getReference().child("Faculty");
         requiredFac.clear();
@@ -414,12 +435,14 @@ public class StudentPlaceRequestFragment extends Fragment {
                    {
                        if(faculty.getAreas().contains(areaId.get(i)))
                        {
+                           // && faculty.getCount() <= faculty.getLimit()
                            requiredFac.add(faculty);
+                           requiredFacId.add(faculty.getUid());
                            break;
                        }
                    }
                 }
-                setspinners(requiredFac);
+                setspinners(requiredFac,areaId);
                 Log.d(TAG,"faculty--------------" + requiredFac.get(0).getNameof());
             }
 
@@ -430,19 +453,12 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
     }
 
-    private void setspinners(ArrayList<Faculty> requiredFac)
-    {
+    private void setspinners(final ArrayList<Faculty> requiredFac, final ArrayList<String> areaId) {
 
-        final ArrayList<String> items = new ArrayList<>();
-        int j =0;
-        while(j<requiredFac.size())
-        {
-            items.add(requiredFac.get(j).getNameof());
-            j++;
-        }
-        items.add("Select Faculty");
+        ArrayList<String> prefArray = new ArrayList<>();
+
         final Button moreFac = (Button) getView().findViewById(R.id.button_moreFac);
-        moreFac.setEnabled(false);
+
         final Spinner spinnerFac1 = getView().findViewById(R.id.spinner_fac1);
         final Spinner spinnerFac2 = getView().findViewById(R.id.spinner_fac2);
         final Spinner spinnerFac3 = getView().findViewById(R.id.spinner_fac3);
@@ -463,6 +479,14 @@ public class StudentPlaceRequestFragment extends Fragment {
             }
         });
 
+        final ArrayList<String> items = new ArrayList<>();
+        int j =0;
+        while(j< this.requiredFac.size())
+        {
+            items.add(this.requiredFac.get(j).getNameof());
+            j++;
+        }
+        items.add("Select Faculty");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
         //set the spinners adapter to the previously created one.
@@ -477,92 +501,268 @@ public class StudentPlaceRequestFragment extends Fragment {
         spinnerFac4.setSelection(items.size()-1);
         spinnerFac5.setSelection(items.size()-1);
 
-
-        spinnerFac1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Button placeRequest = getView().findViewById(R.id.button_place_request);
+        placeRequest.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG,"pref1---------" + adapterView.getItemAtPosition(i).toString());
-                if(i != items.size()-1)
-                    moreFac.setEnabled(true);
-                else
-                    moreFac.setEnabled(false);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                getPref(requiredFac,areaId);
             }
         });
 
-        spinnerFac2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG,"pref1---------" + adapterView.getItemAtPosition(i).toString());
-                if(i != items.size()-1)
-                    moreFac.setEnabled(true);
-                else
-                    moreFac.setEnabled(false);
+    }
 
+    void getPref(ArrayList<Faculty> requiredFac, ArrayList<String> areaId)
+    {
+
+        EditText topic = getView().findViewById(R.id.project_topic_name);
+        EditText desc = getView().findViewById(R.id.project_topic_desc);
+        final Spinner spinnerFac1 = getView().findViewById(R.id.spinner_fac1);
+        final Spinner spinnerFac2 = getView().findViewById(R.id.spinner_fac2);
+        final Spinner spinnerFac3 = getView().findViewById(R.id.spinner_fac3);
+        final Spinner spinnerFac4 = getView().findViewById(R.id.spinner_fac4);
+        final Spinner spinnerFac5 = getView().findViewById(R.id.spinner_fac5);
+        ArrayList<String> Facpref = new ArrayList<>();
+        if(!Objects.equals(spinnerFac1.getSelectedItem().toString(), "Select Faculty"))
+            Facpref.add((String) spinnerFac1.getSelectedItem());
+
+        if(!Objects.equals(spinnerFac2.getSelectedItem().toString(), "Select Faculty"))
+            Facpref.add((String) spinnerFac2.getSelectedItem());
+
+        if(!Objects.equals(spinnerFac3.getSelectedItem().toString(), "Select Faculty"))
+            Facpref.add((String) spinnerFac3.getSelectedItem());
+
+        if(!Objects.equals(spinnerFac4.getSelectedItem().toString(), "Select Faculty"))
+            Facpref.add((String) spinnerFac4.getSelectedItem());
+
+        if(!Objects.equals(spinnerFac5.getSelectedItem().toString(), "Select Faculty"))
+            Facpref.add((String) spinnerFac5.getSelectedItem());
+
+        String projectTopic = topic.getText().toString();
+        String projectDesc = desc.getText().toString();
+        createRequest(requiredFac,areaId,Facpref,projectTopic,projectDesc);
+    }
+
+    private void createRequest(ArrayList<Faculty> requiredFac, ArrayList<String> areaId, ArrayList<String> facpref, String projectTopic, String projectDesc)
+    {
+        int i,k;
+        for(i=0;i<facpref.size();i++)
+        {
+            for(k=0;k<requiredFac.size();k++)
+            {
+                if(Objects.equals(facpref.get(i), requiredFac.get(k).getNameof()))
+                    facpref.set(i,requiredFac.get(k).getUid());
+            }
+        }
+
+        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        final String key =  requestRef.push().getKey();
+        for(i=0; i<facpref.size(); i++)
+        {
+            requestRef.child(key).child("faculties").child(String.valueOf(i)).setValue(facpref.get(facpref.size()-i-1));
+        }
+        for(i=0;i<areaId.size();i++)
+        {
+            requestRef.child(key).child("areas").child(String.valueOf(i)).setValue(areaId.get(i));
+        }
+        requestRef.child(key).child("description").setValue(projectDesc);
+        requestRef.child(key).child("topic").setValue(projectTopic);
+        requestRef.child(key).child("status").setValue("PENDING");
+        requestRef.child(key).child("groupid").setValue(stu.getGroupid());
+
+    }
+
+    private void isHasProject()
+    {
+        Log.d(TAG,"Inside isHasProject");
+
+        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        requestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot requestSnapshot: dataSnapshot.getChildren())
+                {
+                    RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
+                    if(Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
+                    {
+                        hasProject = true;
+                        showExistingProj();
+                        break;
+                    }
+                }
+                if(!hasProject)
+                    getAreaOfInterest();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-        spinnerFac3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG,"pref1---------" + adapterView.getItemAtPosition(i).toString());
-                if(i != items.size()-1)
-                    moreFac.setEnabled(true);
-                else
-                    moreFac.setEnabled(false);
+    }
 
+    private void showExistingProj()
+    {
+        Log.d(TAG,"Inside showExistingProj");
+
+        View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
+        linearLayout.setVisibility(View.GONE);
+        Button createGroupButton = getView().findViewById(R.id.create_group_button);
+        createGroupButton.setVisibility(View.GONE);
+
+        View ll = getView().findViewById(R.id.existing_request_linear_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        final TextView showTopic = getView().findViewById(R.id.show_topic);
+        final TextView showDesc = getView().findViewById(R.id.show_desc);
+        final TextView showStatus = getView().findViewById(R.id.show_status);
+
+        final ArrayList<String> areaList = new ArrayList<>();
+        final ArrayList<String> facList = new ArrayList<>();
+        DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        requestRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i;
+                for(DataSnapshot requestSnapshot: dataSnapshot.getChildren())
+                {
+                    RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
+                    if(Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
+                    {
+                        showTopic.setText(requestQueue.getTopic());
+                        showDesc.setText(requestQueue.getDescription());
+                        showStatus.setText(requestQueue.getStatus());
+                        Log.d(TAG,"areasize========" + requestQueue.getAreas().size());
+                        for (i=0;i<requestQueue.getAreas().size();i++)
+                        {
+                            areaList.add(requestQueue.getAreas().get(i));
+                        }
+                        Log.d(TAG,"facsize========" + requestQueue.getFaculties().size());
+                        for (i=0;i<requestQueue.getFaculties().size();i++)
+                        {
+                            facList.add(requestQueue.getFaculties().get(i));
+                        }
+                        getAreaNames(areaList,facList);
+                    }
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        spinnerFac4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG,"pref1---------" + adapterView.getItemAtPosition(i).toString());
-                if(i != items.size()-1)
-                    moreFac.setEnabled(true);
-                else
-                    moreFac.setEnabled(false);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        spinnerFac5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d(TAG,"pref1---------" + adapterView.getItemAtPosition(i).toString());
-                if(i != items.size()-1)
-                    moreFac.setEnabled(true);
-                else
-                    moreFac.setEnabled(false);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
 
     }
+
+
+    private void getAreaNames(final ArrayList<String> areaList, final ArrayList<String> facList) {
+
+        DatabaseReference areaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
+        areaRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String area;
+                int i;
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    area = areaSnapshot.getValue(String.class);
+                    Log.d(TAG,"areaval----------" + area);
+                    for (i = 0; i < areaList.size(); i++) {
+                        if (Objects.equals(areaList.get(i), areaSnapshot.getKey()))
+                            areaList.set(i, area);
+                    }
+                }
+                Log.d(TAG,"areasize1========" + areaList.size());
+                Log.d(TAG,"facsize1========" + facList.size());
+                getFacNames(areaList, facList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getFacNames(final ArrayList<String> areaList, final ArrayList<String> facList) {
+        DatabaseReference facRef = FirebaseDatabase.getInstance().getReference().child("Faculty");
+        facRef.addValueEventListener(new ValueEventListener() {
+            int i;
+            Faculty faculty;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot facSnapshot : dataSnapshot.getChildren()) {
+                    faculty = facSnapshot.getValue(Faculty.class);
+                    for (i = 0; i < facList.size(); i++) {
+                        if (Objects.equals(faculty.getUid(), facList.get(i)))
+                            facList.set(i, faculty.getNameof());
+                    }
+                }
+
+                Log.d(TAG,"areasize2========" + areaList.size());
+                Log.d(TAG,"facsize2========" + facList.size());
+                setFields(areaList, facList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    private void setFields(ArrayList<String> areaList, ArrayList<String> facList)
+    {
+
+        Log.d(TAG,"areasize3========" + areaList.size());
+        Log.d(TAG,"facsize3========" + facList.size());
+        final LinearLayout facLayout = getView().findViewById(R.id.show_faculty);
+        final LinearLayout areaLayout = getView().findViewById(R.id.show_areas);
+        int i;
+        for(i=0;i<areaList.size();i++)
+        {
+            LinearLayout ll1 = new LinearLayout(getActivity());
+            ll1.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView ar = new TextView(getActivity());
+            ar.setText("Project Area " + (i+1) + ":");
+            ar.setTextSize(20);
+            ar.setPadding(10, 10, 10, 10);
+
+            TextView area = new TextView(getActivity());
+            area.setText(areaList.get(i));
+            area.setTextSize(20);
+            area.setPadding(10, 10, 10, 10);
+
+            ll1.addView(ar);
+            ll1.addView(area);
+
+            areaLayout.addView(ll1);
+        }
+
+        for(i=0;i<facList.size();i++)
+        {
+            LinearLayout ll1 = new LinearLayout(getActivity());
+            ll1.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView fac1 = new TextView(getActivity());
+            fac1.setText("Preference " + (i+1) + ":");
+            fac1.setTextSize(20);
+            fac1.setPadding(10,10,10,10);
+
+            TextView fac = new TextView(getActivity());
+            fac.setText(facList.get(facList.size()-i-1));
+            fac.setTextSize(20);
+            fac.setPadding(10,10,10,10);
+
+            ll1.addView(fac1);
+            ll1.addView(fac);
+
+            facLayout.addView(ll1);
+        }
+    }
+
 
 
 }
