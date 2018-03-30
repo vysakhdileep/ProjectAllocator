@@ -8,34 +8,69 @@ import java.util.ArrayList;
 
 public class RequestQueue {
     ArrayList<String> areas;
+    String description;
     ArrayList<String> faculties;
+    String groupid;
     String status;
-    String group;
+    String topic;
+
+    public RequestQueue() {
+    }
+
+    public RequestQueue(ArrayList<String> areas, String description, ArrayList<String> faculties, String groupid, String status, String topic) {
+        this.areas = areas;
+        this.description = description;
+        this.faculties = faculties;
+        this.groupid = groupid;
+        this.status = status;
+        this.topic = topic;
+    }
 
     public ArrayList<String> getAreas() {
-        return this.areas;
+        return areas;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public ArrayList<String> getFaculties() {
-        return this.faculties;
+        return faculties;
     }
 
-    public String getGroup() {
-        return this.group;
+    public String getGroupid() {
+        return groupid;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public RequestQueue() {
-        //empty constructor
+    public String getTopic() {
+        return topic;
     }
 
-    public RequestQueue(ArrayList<String> areas, ArrayList<String> faculties, String status, String group) {
+    public void setAreas(ArrayList<String> areas) {
         this.areas = areas;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setFaculties(ArrayList<String> faculties) {
         this.faculties = faculties;
+    }
+
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
+    }
+
+    public void setStatus(String status) {
         this.status = status;
-        this.group = group;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }

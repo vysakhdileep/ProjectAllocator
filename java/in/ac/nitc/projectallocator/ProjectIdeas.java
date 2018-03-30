@@ -8,30 +8,35 @@ import java.util.ArrayList;
 
 public class ProjectIdeas {
 
-    private String projectName;
-    private String facultyId;
+    private String topic;
+    private String facultyid;
     ArrayList< String> areas;
+    String description;
+
+    public ProjectIdeas(String topic, String facultyid, ArrayList<String> areas, String description) {
+        this.topic = topic;
+        this.facultyid = facultyid;
+        this.areas = areas;
+        this.description = description;
+    }
 
 
     public ProjectIdeas() {
     }
 
-    public ProjectIdeas(String projectName, String facultyId, ArrayList<String> areas) {
-
-        this.projectName = projectName;
-        this.facultyId = facultyId;
-        this.areas = areas;
+    public String getTopic() {
+        return topic;
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public String getFacultyId() {
-        return facultyId;
+    public String getFacultyid() {
+        return facultyid;
     }
 
     public ArrayList<String> getAreas() {
         return areas;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

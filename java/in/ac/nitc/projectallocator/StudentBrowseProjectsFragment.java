@@ -1,12 +1,17 @@
 package in.ac.nitc.projectallocator;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +56,7 @@ public class StudentBrowseProjectsFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(TAG, "llalala");
+                Log.d(TAG, "OnDataChange");
                 if (!dataSnapshot.exists())
                     Log.d(TAG, "NULL!!!");
                 for (DataSnapshot projectIdeasSnapshot : dataSnapshot.getChildren()) {
@@ -75,7 +80,7 @@ public class StudentBrowseProjectsFragment extends Fragment {
         return view;
     }
 
-    public void getProjects(ArrayList<ProjectIdeas> projectIdeas) {
+    public void getProjects(final ArrayList<ProjectIdeas> projectIdeas) {
         ProjectAdapter projectAdapter = new ProjectAdapter(getActivity(), R.color.background_color, projectIdeas);
 
         ListView listView = (ListView) getView().findViewById(R.id.list);

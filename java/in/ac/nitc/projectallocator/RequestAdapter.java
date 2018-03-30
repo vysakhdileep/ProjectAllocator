@@ -51,7 +51,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         Log.d(TAG, "position: " + position);
 
         TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
-        requestGroup.setText(currRequest.getGroup());
+        requestGroup.setText(currRequest.getGroupid());
 
         Log.d(TAG, "Area size: " + currRequest.getAreas().size());
         for (int i = 0; i < currRequest.getAreas().size(); i++)

@@ -5,24 +5,81 @@
     android:padding="20dp"
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ProjectName"
-        android:id="@+id/project_list_projname"/>
-
+        android:padding="10dp"
+        android:textSize="15dp"
+        />
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ProjectName"
+        android:padding="10dp"
+        android:textSize="15dp"
+        android:id="@+id/project_list_projname"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FacultyName"
-        android:id="@+id/project_list_projFacId"/>
+        android:padding="10dp"
+        android:textSize="15dp" />
 
-    <TextView
+        <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Areas"
+        android:text="FacultyName"
+        android:padding="10dp"
+        android:textSize="15dp"
+        android:id="@+id/project_list_projFacId"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Description"
+        android:padding="10dp"
+        android:textSize="15dp" />
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Description"
+        android:padding="10dp"
+        android:textSize="15dp"
+        android:id="@+id/project_list_projDesc"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:id="@+id/project_list_areas"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Request"
+        android:layout_gravity="center"
+        android:id="@+id/request_facProject"/>
 
 
 </LinearLayout>
