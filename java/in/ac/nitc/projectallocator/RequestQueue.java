@@ -13,6 +13,7 @@ public class RequestQueue {
     String groupid;
     String status;
     String topic;
+    String requestid;
 
     public RequestQueue() {
     }
@@ -73,4 +74,8 @@ public class RequestQueue {
     public void setTopic(String topic) {
         this.topic = topic;
     }
+
+    public void setRequestid(String requestid) { this.requestid = requestid; }
+
+    public String getRequestid() { return requestid; }
 }
