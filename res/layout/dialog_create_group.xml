@@ -1,63 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/popup_element"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:background="@drawable/bg_dark"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:background="@color/windowBackground">
+    android:padding="10dp"
+    app:layout_anchorGravity="center_horizontal">
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_number_of_members"
-            android:textSize="20dp"/>
         <Spinner
             android:id="@+id/spinner_noOfMembers"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
+            android:background="@drawable/dropdown"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
-
-
-
+    <!--android:prompt="Select Number Of Members"-->
     <EditText
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_rollnumber_of_member"
         android:id="@+id/group_member1"
         style="@style/Base.Animation.AppCompat.Dialog"
-        />
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="ubuntu_m"
+        android:hint="@string/enter_rollnumber_of_member"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_rollnumber_of_member"
         android:id="@+id/group_member2"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="ubuntu_m"
+        android:hint="@string/enter_rollnumber_of_member"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_rollnumber_of_member"
         android:id="@+id/group_member3"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="@font/ubuntu_m"
+        android:hint="@string/enter_rollnumber_of_member"
+        android:padding="10dp"
+        android:typeface="sans" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_rollnumber_of_member"
         android:id="@+id/group_member4"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="ubuntu_m"
+        android:hint="@string/enter_rollnumber_of_member"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
 
 </LinearLayout>

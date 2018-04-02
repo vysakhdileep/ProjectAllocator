@@ -1,183 +1,373 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg7"
     tools:context="in.ac.nitc.projectallocator.FacultyProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp"
-        android:background="@color/colorAccent"
+        android:id="@+id/l1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:gravity="top|center"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_centerInParent="true">
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name:"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-
-                />
-
-            <TextView
-                android:id="@+id/textview_faculty_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-                android:text="Name"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phone Number:"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="##########"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_centerInParent="false"
-                android:id="@+id/textview_faculty_phonenumber"
-                android:padding="10dp"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-                android:text="Limit"
-                android:textSize="25dp"
-                android:textStyle="bold"
-
-                />
-
-            <TextView
-                android:id="@+id/textview_faculty_limit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-                android:text="#########"
-                android:textSize="20dp"
-                android:textStyle="bold"
-
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Email:"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:layout_centerInParent="false"
-                android:padding="10dp"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="abc@xyz.com"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:layout_centerInParent="false"
-                android:id="@+id/textview_faculty_email"
-                android:padding="10dp"
-
-                />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/faculty_profile_edit"
+        <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="Edit"
-            android:textColor="@color/textColorPrimary" />
+            android:gravity="top">
 
-        <Button
-            android:id="@+id/faculty_signout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:onClick="SignOut"
-            android:text="SIGN OUT" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/edit_expertise"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha=".75"
+                    android:background="@drawable/facbox1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="12dp">
+
+                    <TextView
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/name_fac"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textview_faculty_name"
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/name"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha=".75"
+                    android:background="@drawable/facbox2"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="0dp"
+                    android:paddingTop="12dp">
+
+                    <TextView
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/phone_number1"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textview_faculty_phonenumber"
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/hashed1"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha=".75"
+                    android:background="@drawable/facbox3"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="0dp"
+                    android:paddingTop="12dp">
+
+                    <TextView
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/limit"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textview_faculty_limit"
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/hashed"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:alpha=".75"
+                    android:background="@drawable/facbox4"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:paddingStart="0dp"
+                    android:paddingTop="12dp">
+
+                    <TextView
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/email1"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textview_faculty_email"
+                        android:layout_width="171dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:fontFamily="@font/ubuntu_m"
+                        android:text="@string/abc_xyz_com"
+                        android:textAlignment="center"
+                        android:textColor="@color/fac_purple"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:id="@+id/l2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Area Expertise" />
+            android:gravity="center_horizontal|end"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/l1"
+            app:layout_constraintHorizontal_bias="0.894"
+            app:layout_constraintStart_toStartOf="@+id/l1"
+            app:layout_constraintTop_toBottomOf="@+id/l1"
+            app:layout_constraintVertical_bias="0.0">
 
-        <ScrollView
-            android:id="@+id/area_expertise"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/sample"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+                android:id="@+id/fab1"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_margin="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/facsmall"
+                android:orientation="horizontal"
+                android:scaleX=".8"
+                android:scaleY=".8"
+                android:visibility="invisible"
+                tools:ignore="RtlHardcoded">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/edit_expertise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:src="@drawable/edit"
+                    app:backgroundTint="@android:color/holo_purple"
+                    app:elevation="2dp"
+                    tools:layout_editor_absoluteX="316dp"
+                    tools:layout_editor_absoluteY="548dp" />
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="ubuntu_m"
+                    android:text="Edit Expertise"
+                    android:textAlignment="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fab2"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/facsmall"
+                android:orientation="horizontal"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/faculty_profile_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:scaleType="center"
+                    android:src="@drawable/edit_data"
+                    app:backgroundTint="@android:color/holo_purple"
+                    app:elevation="2dp"
+                    tools:layout_editor_absoluteX="316dp"
+                    tools:layout_editor_absoluteY="496dp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="ubuntu_m"
+                    android:text="@string/edit_fields"
+                    android:textAlignment="center"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fab3"
+                android:layout_width="170dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/facsmall"
+                android:orientation="horizontal"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:visibility="invisible"
+                tools:ignore="RtlHardcoded">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/faculty_signout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:scaleType="center"
+                    android:src="@drawable/logout"
+                    app:backgroundTint="@android:color/holo_purple"
+                    app:elevation="2dp"
+                    tools:layout_editor_absoluteX="316dp"
+                    tools:layout_editor_absoluteY="548dp" />
+
+                <TextView
+                    android:id="@+id/text3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:fontFamily="ubuntu_m"
+                    android:text="@string/log_out"
+                    android:textAlignment="center"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_main"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:elevation="8dp"
+            android:scaleType="center"
+            android:src="@drawable/arrow_up"
+            app:backgroundTint="@android:color/holo_green_light"
+            app:elevation="2dp"
+            app:pressedTranslationZ="12dp"
+            app:rippleColor="@android:color/holo_green_dark"
+            tools:ignore="RtlHardcoded"
+            tools:layout_editor_absoluteX="316dp"
+            tools:layout_editor_absoluteY="548dp" />
 
     </LinearLayout>
 
 
-
-
-
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

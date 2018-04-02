@@ -3,7 +3,9 @@
     android:id="@+id/popup_element"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/windowBackground"
+    android:layout_margin="10dp"
+    android:background="@drawable/bglist"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -11,7 +13,13 @@
         style="@style/Base.Animation.AppCompat.Dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_m"
         android:padding="10dp"
-        android:text="Are you sure ?" />
+        android:text="Are you sure ?"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
 </LinearLayout>

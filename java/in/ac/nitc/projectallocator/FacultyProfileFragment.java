@@ -1,9 +1,11 @@
 package in.ac.nitc.projectallocator;
 
 import android.app.AlertDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,9 +58,8 @@ public class FacultyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_faculty_profile, container, false);
-
         getRequestData();
-        Button signoutButton = view.findViewById(R.id.faculty_signout);
+        FloatingActionButton signoutButton = view.findViewById(R.id.faculty_signout);
         signoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +73,7 @@ public class FacultyProfileFragment extends Fragment {
         });
 
 
-        Button editButton = view.findViewById(R.id.faculty_profile_edit);
+        FloatingActionButton editButton = view.findViewById(R.id.faculty_profile_edit);
         editButton.setOnClickListener(new View.OnClickListener()
 
         {
@@ -261,7 +262,7 @@ public class FacultyProfileFragment extends Fragment {
                             FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
                     i++;
                 }
-                final Button editExpertise = view.findViewById(R.id.edit_expertise);
+                final FloatingActionButton editExpertise = view.findViewById(R.id.edit_expertise);
                 if (ExpertiseValue.size() == 0) {
                     Log.d(TAG, "Expertise Value empty");
                     editExpertise.setVisibility(View.GONE);

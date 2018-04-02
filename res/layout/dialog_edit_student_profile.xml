@@ -3,34 +3,49 @@
     android:id="@+id/popup_element"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:background="@drawable/bg_dark"
+    android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:background="@color/windowBackground">
+    android:padding="10dp">
 
     <EditText
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_new_username"
         android:id="@+id/new_username"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="@font/ubuntu_m"
+        android:hint="@string/enter_new_username"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
     <EditText
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_new_email"
         android:id="@+id/new_email"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="@font/ubuntu_m"
+        android:hint="@string/enter_new_email"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
     <EditText
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_new_phonenumber"
         android:id="@+id/new_phonenumber"
-        style="@style/Base.Animation.AppCompat.Dialog"/>
-
+        style="@style/Base.Animation.AppCompat.Dialog"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/facbox1"
+        android:fontFamily="@font/ubuntu_m"
+        android:hint="@string/enter_new_phonenumber"
+        android:padding="10dp"
+        android:textStyle="bold"
+        android:typeface="sans" />
 
 
 </LinearLayout>

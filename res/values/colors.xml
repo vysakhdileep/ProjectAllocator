@@ -3,15 +3,16 @@
     <color name="colorPrimary">#125688</color>
     <color name="colorPrimaryDark">#125688</color>
     <color name="textColorPrimary">#FFFFFF</color>
-    <color name="windowBackground">#FFFFFF</color>
+    <color name="windowBackground">#EEEEEE</color>
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#c8e8ff</color>
     <color name="background_color">#F13243</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="white_greyish">#EEEEEE</color>
-    <color name="button_selectorcolor">#9E9E9E</color>
+    <color name="button_selectorcolor">#9e9e9e</color>
     <color name="bg">#3251F1</color>
     <color name="red">#F13243</color>
+    <color name="fac_purple">#800080</color>
 
 </resources>
