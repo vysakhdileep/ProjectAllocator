@@ -40,12 +40,13 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     final String TAG = "StuPlaceRequestFrag";
     boolean hasProject = false;
+    boolean hasAcceptedProj = false;
     FirebaseUser user;
-    String Facpref1,Facpref2,Facpref3,Facpref4,Facpref5;
+    String Facpref1, Facpref2, Facpref3, Facpref4, Facpref5;
     RequestQueue newRequest = new RequestQueue();
     String uid;
     Student stu;
-    DatabaseReference database, StudentRef, StuRef,GroupRef,AreaRef;
+    DatabaseReference database, StudentRef, StuRef, GroupRef, AreaRef;
     private String num;
     ArrayList<String> GroupAreaId = new ArrayList<>();
     ArrayList<Faculty> requiredFac = new ArrayList<>();
@@ -71,7 +72,7 @@ public class StudentPlaceRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"inside onCreateView");
+        Log.d(TAG, "inside onCreateView");
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_student_place_request, container, false);
 
@@ -99,16 +100,13 @@ public class StudentPlaceRequestFragment extends Fragment {
                     Log.d(TAG, "Sturoll:" + stu.getRollnumber());
                     Log.d(TAG, "StugroupId:" + stu.getGroupid());
 
-                    if(stu.getGroupid().isEmpty())
-                    {
-                        Log.d(TAG,"empty groupid!!");
+                    if (stu.getGroupid().isEmpty()) {
+                        Log.d(TAG, "empty groupid!!");
                         createGroup();
 
-                    }
-                    else
-                    {
-                        Log.d(TAG,"groupid====" + stu.getGroupid());
-                        isHasProject();
+                    } else {
+                        Log.d(TAG, "groupid====" + stu.getGroupid());
+                        isHasAcceptProject();
 
                     }
 
@@ -127,9 +125,8 @@ public class StudentPlaceRequestFragment extends Fragment {
     }
 
 
-    void createGroup()
-    {
-        Log.d(TAG,"Inside CreateGroup");
+    void createGroup() {
+        Log.d(TAG, "Inside CreateGroup");
 
         View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
         linearLayout.setVisibility(View.GONE);
@@ -147,7 +144,7 @@ public class StudentPlaceRequestFragment extends Fragment {
 
 
                 final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_create_group,null);
+                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_create_group, null);
                 Log.d(TAG, "onClick:view inflate");
 
                 final EditText member1 = mView.findViewById(R.id.group_member1);
@@ -162,7 +159,7 @@ public class StudentPlaceRequestFragment extends Fragment {
                 //get the spinner from the xml.
                 Spinner dropdown = mView.findViewById(R.id.spinner_noOfMembers);
                 //create a list of items for the spinner.
-                String[] items = new String[]{"2", "3","4","5"};
+                String[] items = new String[]{"2", "3", "4", "5"};
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
                 //set the spinners adapter to the previously created one.
                 dropdown.setAdapter(adapter);
@@ -172,34 +169,27 @@ public class StudentPlaceRequestFragment extends Fragment {
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         setNum(adapterView.getItemAtPosition(i).toString());
 
-                        Log.d(TAG,"num:" + getNum());
+                        Log.d(TAG, "num:" + getNum());
 
-                        if(getNum().equals("2"))
-                        {
+                        if (getNum().equals("2")) {
                             member1.setVisibility(View.VISIBLE);
                             member2.setVisibility(View.GONE);
                             member3.setVisibility(View.GONE);
                             member4.setVisibility(View.GONE);
 
-                        }
-                        else if(getNum().equals("3"))
-                        {
+                        } else if (getNum().equals("3")) {
                             member1.setVisibility(View.VISIBLE);
                             member2.setVisibility(View.VISIBLE);
                             member3.setVisibility(View.GONE);
                             member4.setVisibility(View.GONE);
 
-                        }
-                        else if(getNum().equals("4"))
-                        {
+                        } else if (getNum().equals("4")) {
                             member1.setVisibility(View.VISIBLE);
                             member2.setVisibility(View.VISIBLE);
                             member3.setVisibility(View.VISIBLE);
                             member4.setVisibility(View.GONE);
 
-                        }
-                        else if(getNum().equals("5"))
-                        {
+                        } else if (getNum().equals("5")) {
                             member1.setVisibility(View.VISIBLE);
                             member2.setVisibility(View.VISIBLE);
                             member3.setVisibility(View.VISIBLE);
@@ -216,33 +206,25 @@ public class StudentPlaceRequestFragment extends Fragment {
                 });
 
 
-
                 alert.setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         final HashSet<String> GroupMembers = new HashSet<>();
 
-                        if(getNum()!= null && getNum().equals("2"))
-                        {
-                            Log.d(TAG,"inside two!!");
+                        if (getNum() != null && getNum().equals("2")) {
+                            Log.d(TAG, "inside two!!");
                             GroupMembers.add(member1.getText().toString());
-                        }
-                        else if(getNum()!= null && getNum().equals("3"))
-                        {
+                        } else if (getNum() != null && getNum().equals("3")) {
                             GroupMembers.add(member1.getText().toString());
                             GroupMembers.add(member2.getText().toString());
 
-                        }
-                        else if(getNum()!= null && getNum().equals("4"))
-                        {
+                        } else if (getNum() != null && getNum().equals("4")) {
                             GroupMembers.add(member1.getText().toString());
                             GroupMembers.add(member2.getText().toString());
                             GroupMembers.add(member3.getText().toString());
 
-                        }
-                        else if(getNum()!= null && getNum().equals("5"))
-                        {
+                        } else if (getNum() != null && getNum().equals("5")) {
                             GroupMembers.add(member1.getText().toString());
                             GroupMembers.add(member2.getText().toString());
                             GroupMembers.add(member3.getText().toString());
@@ -250,13 +232,13 @@ public class StudentPlaceRequestFragment extends Fragment {
                         }
 
 
-                            Log.d(TAG,"Got Inside if!! hashsize:" + GroupMembers.size());
+                        Log.d(TAG, "Got Inside if!! hashsize:" + GroupMembers.size());
 
 
                         GroupRef = FirebaseDatabase.getInstance().getReference().child("Group");
-                        final String key =  GroupRef.push().getKey();
+                        final String key = GroupRef.push().getKey();
                         GroupRef.child(key).child("0").setValue(stu.getUid());
-                        Log.d(TAG,"new group Key:" + key);
+                        Log.d(TAG, "new group Key:" + key);
 
                         StuRef = database.child("Student");
                         StuRef.child(stu.getUid()).child("groupid").setValue(key);
@@ -264,14 +246,12 @@ public class StudentPlaceRequestFragment extends Fragment {
                         StuRef.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for(DataSnapshot studentSnapshot: dataSnapshot.getChildren())
-                                {
+                                for (DataSnapshot studentSnapshot : dataSnapshot.getChildren()) {
                                     Student stu1 = studentSnapshot.getValue(Student.class);
-                                    if(GroupMembers.contains(stu1.getRollnumber()))
-                                    {
-                                        Log.d(TAG,"rollnum:" + stu1.getRollnumber());
-                                        Log.d(TAG,"nameofstu:" + stu1.getNameof());
-                                        Log.d(TAG,"stuid:" + stu1.getUid());
+                                    if (GroupMembers.contains(stu1.getRollnumber())) {
+                                        Log.d(TAG, "rollnum:" + stu1.getRollnumber());
+                                        Log.d(TAG, "nameofstu:" + stu1.getNameof());
+                                        Log.d(TAG, "stuid:" + stu1.getUid());
                                         FirebaseDatabase.getInstance().getReference().
                                                 child("Student").child(stu1.getUid()).child("groupid").setValue(key);
                                         GroupRef.child(key).child(String.valueOf(finalI)).setValue(stu1.getUid());
@@ -298,9 +278,8 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
     }
 
-    void getAreaOfInterest()
-    {
-        Log.d(TAG,"INSIDE getAreaOfInterest");
+    void getAreaOfInterest() {
+        Log.d(TAG, "INSIDE getAreaOfInterest");
 
         final Button createGroupButton = getView().findViewById(R.id.create_group_button);
         createGroupButton.setVisibility(View.GONE);
@@ -331,14 +310,13 @@ public class StudentPlaceRequestFragment extends Fragment {
         AreaRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot areaSnapshot: dataSnapshot.getChildren())
-                {
-                     areaExpertise.add(areaSnapshot.getValue(String.class));
-                     areaId.add(areaSnapshot.getKey());
-                     Log.d(TAG,"areaId:--------- " + areaSnapshot.getKey());
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    areaExpertise.add(areaSnapshot.getValue(String.class));
+                    areaId.add(areaSnapshot.getKey());
+                    Log.d(TAG, "areaId:--------- " + areaSnapshot.getKey());
 
                 }
-                showAreaofInterest(areaExpertise,areaId);
+                showAreaofInterest(areaExpertise, areaId);
 
             }
 
@@ -351,30 +329,28 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     }
 
-    void showAreaofInterest(final ArrayList<String> areaExpertise, final ArrayList<String> areaId)
-    {
+    void showAreaofInterest(final ArrayList<String> areaExpertise, final ArrayList<String> areaId) {
 
-        Log.d(TAG,"inside func" + areaExpertise.size());
+        Log.d(TAG, "inside func" + areaExpertise.size());
         Button selectArea = getView().findViewById(R.id.button_area_of_interest);
 
         selectArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                int i=0;
-                Log.d(TAG,"inside!!!");
+                int i = 0;
+                Log.d(TAG, "inside!!!");
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_select_area_of_interest,null);
+                final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_select_area_of_interest, null);
 
                 ScrollView sv = mView.findViewById(R.id.area_expertise_scrollview);
                 final LinearLayout ll = new LinearLayout(getActivity());
                 ll.setOrientation(LinearLayout.VERTICAL);
                 sv.addView(ll);
 
-                while (i<areaExpertise.size())
-                {
-                    Log.d(TAG,"in while!!!");
+                while (i < areaExpertise.size()) {
+                    Log.d(TAG, "in while!!!");
                     CheckBox ch = new CheckBox(getActivity());
                     ch.setText((CharSequence) areaExpertise.get(i));
                     ch.setId(i);
@@ -384,22 +360,19 @@ public class StudentPlaceRequestFragment extends Fragment {
                 }
 
                 alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
 
                         GroupAreaId.clear();
-                        Log.d(TAG,"size: " + areaExpertise.size());
-                            int k =0;
-                        while(k < areaExpertise.size())
-                            {
-                                CheckBox ch = (CheckBox) mView.findViewById(k);
-                                if(ch.isChecked())
-                                {
-                                    GroupAreaId.add(String.valueOf(ch.getTag()));
-                                    Log.d(TAG,"area selected" + GroupAreaId.get(0));
-                                }
-                                k++;
+                        Log.d(TAG, "size: " + areaExpertise.size());
+                        int k = 0;
+                        while (k < areaExpertise.size()) {
+                            CheckBox ch = (CheckBox) mView.findViewById(k);
+                            if (ch.isChecked()) {
+                                GroupAreaId.add(String.valueOf(ch.getTag()));
+                                Log.d(TAG, "area selected" + GroupAreaId.get(0));
                             }
+                            k++;
+                        }
                         getRequiredFac(GroupAreaId);
 
 
@@ -414,36 +387,31 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
 
 
-
     }
 
-    private void getRequiredFac(final ArrayList<String> areaId)
-    {
+    private void getRequiredFac(final ArrayList<String> areaId) {
         final ArrayList<String> requiredFacId = new ArrayList<>();
         DatabaseReference facRef;
         facRef = FirebaseDatabase.getInstance().getReference().child("Faculty");
         requiredFac.clear();
         facRef.addValueEventListener(new ValueEventListener() {
             Faculty faculty;
+
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                for(DataSnapshot facSnapshot: dataSnapshot.getChildren())
-                {
-                   faculty = facSnapshot.getValue(Faculty.class);
-                   for(int i=0;i<areaId.size();i++)
-                   {
-                       if(faculty.getAreas().contains(areaId.get(i)))
-                       {
-                           // && faculty.getCount() <= faculty.getLimit()
-                           requiredFac.add(faculty);
-                           requiredFacId.add(faculty.getUid());
-                           break;
-                       }
-                   }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot facSnapshot : dataSnapshot.getChildren()) {
+                    faculty = facSnapshot.getValue(Faculty.class);
+                    for (int i = 0; i < areaId.size(); i++) {
+                        if (faculty.getAreas().contains(areaId.get(i))) {
+                            // && faculty.getCount() <= faculty.getLimit()
+                            requiredFac.add(faculty);
+                            requiredFacId.add(faculty.getUid());
+                            break;
+                        }
+                    }
                 }
-                setspinners(requiredFac,areaId);
-                Log.d(TAG,"faculty--------------" + requiredFac.get(0).getNameof());
+                setspinners(requiredFac, areaId);
+                Log.d(TAG, "faculty--------------" + requiredFac.get(0).getNameof());
             }
 
             @Override
@@ -468,21 +436,20 @@ public class StudentPlaceRequestFragment extends Fragment {
         moreFac.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(spinnerFac2.getVisibility() == View.GONE)
+                if (spinnerFac2.getVisibility() == View.GONE)
                     spinnerFac2.setVisibility(View.VISIBLE);
-                else if(spinnerFac2.getVisibility() == View.VISIBLE && spinnerFac3.getVisibility() == View.GONE)
+                else if (spinnerFac2.getVisibility() == View.VISIBLE && spinnerFac3.getVisibility() == View.GONE)
                     spinnerFac3.setVisibility(View.VISIBLE);
-                else if(spinnerFac3.getVisibility() == View.VISIBLE && spinnerFac4.getVisibility() == View.GONE)
+                else if (spinnerFac3.getVisibility() == View.VISIBLE && spinnerFac4.getVisibility() == View.GONE)
                     spinnerFac4.setVisibility(View.VISIBLE);
-                else if(spinnerFac4.getVisibility() == View.VISIBLE && spinnerFac5.getVisibility() == View.GONE)
+                else if (spinnerFac4.getVisibility() == View.VISIBLE && spinnerFac5.getVisibility() == View.GONE)
                     spinnerFac5.setVisibility(View.VISIBLE);
             }
         });
 
         final ArrayList<String> items = new ArrayList<>();
-        int j =0;
-        while(j< this.requiredFac.size())
-        {
+        int j = 0;
+        while (j < this.requiredFac.size()) {
             items.add(this.requiredFac.get(j).getNameof());
             j++;
         }
@@ -495,24 +462,23 @@ public class StudentPlaceRequestFragment extends Fragment {
         spinnerFac3.setAdapter(adapter);
         spinnerFac4.setAdapter(adapter);
         spinnerFac5.setAdapter(adapter);
-        spinnerFac1.setSelection(items.size()-1);
-        spinnerFac2.setSelection(items.size()-1);
-        spinnerFac3.setSelection(items.size()-1);
-        spinnerFac4.setSelection(items.size()-1);
-        spinnerFac5.setSelection(items.size()-1);
+        spinnerFac1.setSelection(items.size() - 1);
+        spinnerFac2.setSelection(items.size() - 1);
+        spinnerFac3.setSelection(items.size() - 1);
+        spinnerFac4.setSelection(items.size() - 1);
+        spinnerFac5.setSelection(items.size() - 1);
 
         Button placeRequest = getView().findViewById(R.id.button_place_request);
         placeRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPref(requiredFac,areaId);
+                getPref(requiredFac, areaId);
             }
         });
 
     }
 
-    void getPref(ArrayList<Faculty> requiredFac, ArrayList<String> areaId)
-    {
+    void getPref(ArrayList<Faculty> requiredFac, ArrayList<String> areaId) {
 
         EditText topic = getView().findViewById(R.id.project_topic_name);
         EditText desc = getView().findViewById(R.id.project_topic_desc);
@@ -522,46 +488,41 @@ public class StudentPlaceRequestFragment extends Fragment {
         final Spinner spinnerFac4 = getView().findViewById(R.id.spinner_fac4);
         final Spinner spinnerFac5 = getView().findViewById(R.id.spinner_fac5);
         ArrayList<String> Facpref = new ArrayList<>();
-        if(!Objects.equals(spinnerFac1.getSelectedItem().toString(), "Select Faculty"))
+        if (!Objects.equals(spinnerFac1.getSelectedItem().toString(), "Select Faculty"))
             Facpref.add((String) spinnerFac1.getSelectedItem());
 
-        if(!Objects.equals(spinnerFac2.getSelectedItem().toString(), "Select Faculty"))
+        if (!Objects.equals(spinnerFac2.getSelectedItem().toString(), "Select Faculty"))
             Facpref.add((String) spinnerFac2.getSelectedItem());
 
-        if(!Objects.equals(spinnerFac3.getSelectedItem().toString(), "Select Faculty"))
+        if (!Objects.equals(spinnerFac3.getSelectedItem().toString(), "Select Faculty"))
             Facpref.add((String) spinnerFac3.getSelectedItem());
 
-        if(!Objects.equals(spinnerFac4.getSelectedItem().toString(), "Select Faculty"))
+        if (!Objects.equals(spinnerFac4.getSelectedItem().toString(), "Select Faculty"))
             Facpref.add((String) spinnerFac4.getSelectedItem());
 
-        if(!Objects.equals(spinnerFac5.getSelectedItem().toString(), "Select Faculty"))
+        if (!Objects.equals(spinnerFac5.getSelectedItem().toString(), "Select Faculty"))
             Facpref.add((String) spinnerFac5.getSelectedItem());
 
         String projectTopic = topic.getText().toString();
         String projectDesc = desc.getText().toString();
-        createRequest(requiredFac,areaId,Facpref,projectTopic,projectDesc);
+        createRequest(requiredFac, areaId, Facpref, projectTopic, projectDesc);
     }
 
-    private void createRequest(ArrayList<Faculty> requiredFac, ArrayList<String> areaId, ArrayList<String> facpref, String projectTopic, String projectDesc)
-    {
-        int i,k;
-        for(i=0;i<facpref.size();i++)
-        {
-            for(k=0;k<requiredFac.size();k++)
-            {
-                if(Objects.equals(facpref.get(i), requiredFac.get(k).getNameof()))
-                    facpref.set(i,requiredFac.get(k).getUid());
+    private void createRequest(ArrayList<Faculty> requiredFac, ArrayList<String> areaId, ArrayList<String> facpref, String projectTopic, String projectDesc) {
+        int i, k;
+        for (i = 0; i < facpref.size(); i++) {
+            for (k = 0; k < requiredFac.size(); k++) {
+                if (Objects.equals(facpref.get(i), requiredFac.get(k).getNameof()))
+                    facpref.set(i, requiredFac.get(k).getUid());
             }
         }
 
         DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
-        final String key =  requestRef.push().getKey();
-        for(i=0; i<facpref.size(); i++)
-        {
-            requestRef.child(key).child("faculties").child(String.valueOf(i)).setValue(facpref.get(facpref.size()-i-1));
+        final String key = requestRef.push().getKey();
+        for (i = 0; i < facpref.size(); i++) {
+            requestRef.child(key).child("faculties").child(String.valueOf(i)).setValue(facpref.get(facpref.size() - i - 1));
         }
-        for(i=0;i<areaId.size();i++)
-        {
+        for (i = 0; i < areaId.size(); i++) {
             requestRef.child(key).child("areas").child(String.valueOf(i)).setValue(areaId.get(i));
         }
         requestRef.child(key).child("description").setValue(projectDesc);
@@ -571,25 +532,22 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     }
 
-    private void isHasProject()
-    {
-        Log.d(TAG,"Inside isHasProject");
+    private void isHasProject() {
+        Log.d(TAG, "Inside isHasProject");
 
         DatabaseReference requestRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
         requestRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot requestSnapshot: dataSnapshot.getChildren())
-                {
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
-                    if(Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
-                    {
+                    if (Objects.equals(requestQueue.getGroupid(), stu.getGroupid())) {
                         hasProject = true;
                         showExistingProj();
                         break;
                     }
                 }
-                if(!hasProject)
+                if (!hasProject)
                     getAreaOfInterest();
             }
 
@@ -600,9 +558,98 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
     }
 
-    private void showExistingProj()
+    private void isHasAcceptProject() {
+        Log.d(TAG, "Inside isHasAcceptProject");
+
+        DatabaseReference acceptRef = FirebaseDatabase.getInstance().getReference().child("AcceptProject");
+        acceptRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot acceptSnapshot : dataSnapshot.getChildren()) {
+                    AcceptProject acceptProject = acceptSnapshot.getValue(AcceptProject.class);
+                    if (Objects.equals(acceptProject.getGroupid(), stu.getGroupid())) {
+                        hasAcceptedProj = true;
+                        showAcceptProj();
+                        break;
+                    }
+                }
+                if (!hasProject)
+                    isHasProject();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void showAcceptProj()
     {
-        Log.d(TAG,"Inside showExistingProj");
+        Log.d(TAG, "Inside showAcceptProj");
+        View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
+        linearLayout.setVisibility(View.GONE);
+        Button createGroupButton = getView().findViewById(R.id.create_group_button);
+        createGroupButton.setVisibility(View.GONE);
+
+        View ll = getView().findViewById(R.id.existing_request_linear_layout);
+        ll.setVisibility(View.VISIBLE);
+
+        final TextView showTopic = getView().findViewById(R.id.show_topic);
+        final TextView showDesc = getView().findViewById(R.id.show_desc);
+        final TextView showStatus = getView().findViewById(R.id.show_status);
+        final LinearLayout facLayout = getView().findViewById(R.id.show_faculty);
+        final ArrayList<String> areaList = new ArrayList<>();
+        final ArrayList<String> facList = new ArrayList<>();
+        DatabaseReference acceptRef = FirebaseDatabase.getInstance().getReference().child("AcceptProject");
+        acceptRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int i;
+                for (DataSnapshot acceptSnapshot : dataSnapshot.getChildren()) {
+                    AcceptProject acceptProject = acceptSnapshot.getValue(AcceptProject.class);
+                    if (Objects.equals(acceptProject.getGroupid(), stu.getGroupid())) {
+                        showTopic.setText(acceptProject.getTopic());
+                        showDesc.setText(acceptProject.getDescription());
+                        Log.d(TAG, "areasize========" + acceptProject.getAreas().size());
+                        areaList.clear();
+                        for (i = 0; i < acceptProject.getAreas().size(); i++) {
+                            areaList.add(acceptProject.getAreas().get(i));
+                        }
+                        LinearLayout ll1 = new LinearLayout(getActivity());
+                        ll1.setOrientation(LinearLayout.HORIZONTAL);
+                        facLayout.removeAllViews();
+
+                        TextView fac1 = new TextView(getActivity());
+                        fac1.setText("Faculty: ");
+                        fac1.setTextSize(20);
+                        fac1.setPadding(10, 10, 10, 10);
+
+                        TextView fac = new TextView(getActivity());
+                        fac.setText(acceptProject.getFaculty());
+                        fac.setTextSize(20);
+                        fac.setPadding(10, 10, 10, 10);
+
+                        ll1.addView(fac1);
+                        ll1.addView(fac);
+
+                        facLayout.addView(ll1);
+                        facList.clear();
+                        getAreaNames(areaList,facList);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void showExistingProj() {
+        Log.d(TAG, "Inside showExistingProj");
 
         View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
         linearLayout.setVisibility(View.GONE);
@@ -623,25 +670,21 @@ public class StudentPlaceRequestFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int i;
-                for(DataSnapshot requestSnapshot: dataSnapshot.getChildren())
-                {
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
-                    if(Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
-                    {
+                    if (Objects.equals(requestQueue.getGroupid(), stu.getGroupid())) {
                         showTopic.setText(requestQueue.getTopic());
                         showDesc.setText(requestQueue.getDescription());
                         showStatus.setText(requestQueue.getStatus());
-                        Log.d(TAG,"areasize========" + requestQueue.getAreas().size());
-                        for (i=0;i<requestQueue.getAreas().size();i++)
-                        {
+                        Log.d(TAG, "areasize========" + requestQueue.getAreas().size());
+                        for (i = 0; i < requestQueue.getAreas().size(); i++) {
                             areaList.add(requestQueue.getAreas().get(i));
                         }
-                        Log.d(TAG,"facsize========" + requestQueue.getFaculties().size());
-                        for (i=0;i<requestQueue.getFaculties().size();i++)
-                        {
+                        Log.d(TAG, "facsize========" + requestQueue.getFaculties().size());
+                        for (i = 0; i < requestQueue.getFaculties().size(); i++) {
                             facList.add(requestQueue.getFaculties().get(i));
                         }
-                        getAreaNames(areaList,facList);
+                        getAreaNames(areaList, facList);
                     }
                 }
             }
@@ -665,14 +708,14 @@ public class StudentPlaceRequestFragment extends Fragment {
                 int i;
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                     area = areaSnapshot.getValue(String.class);
-                    Log.d(TAG,"areaval----------" + area);
+                    Log.d(TAG, "areaval----------" + area);
                     for (i = 0; i < areaList.size(); i++) {
                         if (Objects.equals(areaList.get(i), areaSnapshot.getKey()))
                             areaList.set(i, area);
                     }
                 }
-                Log.d(TAG,"areasize1========" + areaList.size());
-                Log.d(TAG,"facsize1========" + facList.size());
+                Log.d(TAG, "areasize1========" + areaList.size());
+                Log.d(TAG, "facsize1========" + facList.size());
                 getFacNames(areaList, facList);
             }
 
@@ -700,8 +743,8 @@ public class StudentPlaceRequestFragment extends Fragment {
                     }
                 }
 
-                Log.d(TAG,"areasize2========" + areaList.size());
-                Log.d(TAG,"facsize2========" + facList.size());
+                Log.d(TAG, "areasize2========" + areaList.size());
+                Log.d(TAG, "facsize2========" + facList.size());
                 setFields(areaList, facList);
             }
 
@@ -712,21 +755,21 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
 
     }
-    private void setFields(ArrayList<String> areaList, ArrayList<String> facList)
-    {
 
-        Log.d(TAG,"areasize3========" + areaList.size());
-        Log.d(TAG,"facsize3========" + facList.size());
+    private void setFields(ArrayList<String> areaList, ArrayList<String> facList) {
+
+        Log.d(TAG, "areasize3========" + areaList.size());
+        Log.d(TAG, "facsize3========" + facList.size());
         final LinearLayout facLayout = getView().findViewById(R.id.show_faculty);
         final LinearLayout areaLayout = getView().findViewById(R.id.show_areas);
         int i;
-        for(i=0;i<areaList.size();i++)
-        {
+        for (i = 0; i < areaList.size(); i++) {
+
             LinearLayout ll1 = new LinearLayout(getActivity());
             ll1.setOrientation(LinearLayout.HORIZONTAL);
-
+            areaLayout.removeAllViews();
             TextView ar = new TextView(getActivity());
-            ar.setText("Project Area " + (i+1) + ":");
+            ar.setText("Project Area " + (i + 1) + ":");
             ar.setTextSize(20);
             ar.setPadding(10, 10, 10, 10);
 
@@ -741,20 +784,20 @@ public class StudentPlaceRequestFragment extends Fragment {
             areaLayout.addView(ll1);
         }
 
-        for(i=0;i<facList.size();i++)
-        {
+        for (i = 0; i < facList.size(); i++) {
             LinearLayout ll1 = new LinearLayout(getActivity());
             ll1.setOrientation(LinearLayout.HORIZONTAL);
+            facLayout.removeAllViews();
 
             TextView fac1 = new TextView(getActivity());
-            fac1.setText("Preference " + (i+1) + ":");
+            fac1.setText("Preference " + (i + 1) + ":");
             fac1.setTextSize(20);
-            fac1.setPadding(10,10,10,10);
+            fac1.setPadding(10, 10, 10, 10);
 
             TextView fac = new TextView(getActivity());
-            fac.setText(facList.get(facList.size()-i-1));
+            fac.setText(facList.get(facList.size() - i - 1));
             fac.setTextSize(20);
-            fac.setPadding(10,10,10,10);
+            fac.setPadding(10, 10, 10, 10);
 
             ll1.addView(fac1);
             ll1.addView(fac);
@@ -762,7 +805,6 @@ public class StudentPlaceRequestFragment extends Fragment {
             facLayout.addView(ll1);
         }
     }
-
 
 
 }

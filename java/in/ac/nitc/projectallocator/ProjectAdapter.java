@@ -128,6 +128,7 @@ public class ProjectAdapter extends ArrayAdapter<ProjectIdeas> {
     private void setareas(ArrayList<String> areas, LinearLayout listItemView, ProjectIdeas currProject)
     {
         final LinearLayout projarea = listItemView.findViewById(R.id.project_list_areas);
+        projarea.removeAllViews();
         int i;
         for (i=0;i<areas.size();i++)
         {
