@@ -30,7 +30,8 @@ import java.util.ArrayList;
 
 public class RequestAdapter extends ArrayAdapter<RequestQueue> {
     private static final String TAG = "RequestAdapter";
-    private DatabaseReference mDatabase, requestDatabase, acceptRequest;
+    private DatabaseReference mDatabase, requestDatabase, acceptRequest, groupDatabase, studentDatabase;
+    private ArrayList<String> students = new ArrayList<>();
 
     public RequestAdapter(@NonNull Context context, int resource, ArrayList<RequestQueue> objects) {
         super(context, resource, objects);
@@ -49,8 +50,52 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
         final RequestQueue currRequest = getItem(position);
         Log.d(TAG, "position: " + position);
 
-        TextView requestGroup = (TextView) listItemView.findViewById(R.id.request_list_group);
-        requestGroup.setText(currRequest.getGroupid());
+        final LinearLayout requestGroup = (LinearLayout) listItemView.findViewById(R.id.request_list_group);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        groupDatabase = mDatabase.child("Group").child(currRequest.groupid);
+        studentDatabase = mDatabase.child("Student");
+
+        groupDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                students.clear();
+                if (!dataSnapshot.exists())
+                    Log.d(TAG, "NULL!!!");
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
+                    students.add(requestSnapshot.getValue().toString());
+                }
+
+
+                for (int i = 0; i < students.size(); i++) {
+                    final int j = i;
+                    studentDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                TextView text = new TextView(getContext());
+                                String temp = dataSnapshot.child(students.get(j)).child("nameof").getValue(String.class);
+                                text.setText(temp);
+                                requestGroup.addView(text);
+                                Log.d(TAG, "Student " + temp);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "LoadRequest:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
 
 
         TextView requestTopic = (TextView) listItemView.findViewById(R.id.request_topic);
@@ -86,7 +131,7 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                         acceptRequest.child(key).child("faculty").setValue(FirebaseAuth.getInstance().getCurrentUser().getUid());
                         acceptRequest.child(key).child("groupid").setValue(currRequest.groupid);
                         acceptRequest.child(key).child("topic").setValue(currRequest.topic);
-                        acceptRequest.child(key).child("description").setValue(" ");
+                        acceptRequest.child(key).child("description").setValue(currRequest.description);
 
                         Integer i = 0;
                         while (i < currRequest.areas.size()) {
@@ -134,13 +179,13 @@ public class RequestAdapter extends ArrayAdapter<RequestQueue> {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (!dataSnapshot.exists())
                                     Log.d(TAG, "NULL!!!");
-                                long l = dataSnapshot.child(currRequest.requestid).child("faculties").getChildrenCount();
-                                if (l > 0 && dataSnapshot.child(currRequest.requestid).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
-                                    mDatabase.child("RequestQueue").child(currRequest.requestid).child("faculties").child(String.valueOf(l - 1)).removeValue();
+                                long l = dataSnapshot.child(currRequest.getRequestid()).child("faculties").getChildrenCount();
+                                Log.d(TAG, "l value is" + l);
+                                if (l > 0 && dataSnapshot.child(currRequest.getRequestid()).child("faculties").child(String.valueOf(l - 1)).getValue().equals(user)) {
+                                    mDatabase.child("RequestQueue").child(currRequest.getRequestid()).child("faculties").child(String.valueOf(l - 1)).removeValue();
                                     if (l == 1) {
                                         String reject = "REJECTED";
-                                        mDatabase.child("RequestQueue").child(currRequest.requestid).child("status").setValue(reject);
-                                        mDatabase.child("RequestQueue").child(currRequest.requestid).removeValue();
+                                        mDatabase.child("RequestQueue").child(currRequest.getRequestid()).child("status").setValue(reject);
                                         FirebaseMessageService.Listening(reject);
                                     }
                                 }

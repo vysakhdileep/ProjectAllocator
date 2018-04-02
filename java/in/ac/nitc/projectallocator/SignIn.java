@@ -133,7 +133,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                             AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
                             alertDialog.setTitle("Forgot Password");
                             alertDialog.setMessage("User does not exist");
-                            alertDialog.setIcon(R.drawable.user);
+                            alertDialog.setIcon(R.drawable.circle);
                             Log.d(TAG, "User does not exist");
                             alertDialog.show();
                             login.setVisibility(View.VISIBLE);
@@ -145,7 +145,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                         AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
                         alertDialog.setTitle("Forgot Password");
                         alertDialog.setMessage("Invalid email");
-                        alertDialog.setIcon(R.drawable.user);
+                        alertDialog.setIcon(R.drawable.circle);
                         Log.d(TAG, "Invalid email");
                         alertDialog.show();
                         login.setVisibility(View.VISIBLE);
@@ -160,7 +160,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
             AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
             alertDialog.setTitle("Forgot Password");
             alertDialog.setMessage("Please enter your email address");
-            alertDialog.setIcon(R.drawable.user);
+            alertDialog.setIcon(R.drawable.circle);
             Log.d(TAG, "User does not exist");
             alertDialog.show();
             login.setVisibility(View.VISIBLE);
@@ -182,7 +182,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                         AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
                         alertDialog.setTitle("Forgot Password");
                         alertDialog.setMessage("Email is sent");
-                        alertDialog.setIcon(R.drawable.user);
+                        alertDialog.setIcon(R.drawable.circle);
 
                         alertDialog.show();
                         Log.d(TAG, "Email sent." + emailAddress);
@@ -194,7 +194,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
                 AlertDialog alertDialog = new AlertDialog.Builder(SignIn.this).create();
                 alertDialog.setTitle("Forgot Password");
                 alertDialog.setMessage("Error Occured");
-                alertDialog.setIcon(R.drawable.user);
+                alertDialog.setIcon(R.drawable.circle);
 
                 alertDialog.show();
             }

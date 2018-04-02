@@ -132,6 +132,8 @@ public class FacultyProfileFragment extends Fragment {
     public void editAreaExpertise() {
         Log.d(TAG, "Edit expertise...");
         final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
+
+
         final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_expertise, null);
         LinearLayout linearMain;
         linearMain = (LinearLayout) mView.findViewById(R.id.list_areas);
@@ -153,6 +155,9 @@ public class FacultyProfileFragment extends Fragment {
             linearMain.addView(checkBox);
 
         }
+
+        mBUilder.setView(mView);
+        final AlertDialog ad = mBUilder.show();
         final ArrayList<String> checked =new ArrayList<>();
         Button submitareas = (Button) mView.findViewById(R.id.change_areas);
         submitareas.setOnClickListener(new View.OnClickListener() {
@@ -169,11 +174,14 @@ public class FacultyProfileFragment extends Fragment {
                     }
                     i++;
                 }
+                ad.dismiss();
                 AddAreasFirebase(checked);
+                Toast.makeText(getActivity(), "Changed successfully....",
+                        Toast.LENGTH_SHORT).show();
+
             }
         });
-        mBUilder.setView(mView);
-        mBUilder.show();
+
 
 
     }

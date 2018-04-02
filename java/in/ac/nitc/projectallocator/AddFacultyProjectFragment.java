@@ -88,7 +88,7 @@ public class AddFacultyProjectFragment extends Fragment {
                     ProjectIdeas = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
                     String key = ProjectIdeas.push().getKey();
 
-                    ProjectIdeas.child(key).child("nameof").setValue(temp);
+                    ProjectIdeas.child(key).child("topic").setValue(temp);
                     ProjectIdeas.child(key).child("description").setValue(temp2);
                     ProjectIdeas.child(key).child("facultyid").setValue(uid);
 
@@ -132,6 +132,7 @@ public class AddFacultyProjectFragment extends Fragment {
 
 
                 Log.d(TAG," Values "+i+" "+ ExpertiseValue.size());
+                linearMain.removeAllViews();
                 while (i < ExpertiseValue.size()) {
                     Log.d(TAG," Inside loop"+i);
                     checkBox = new CheckBox(getContext());

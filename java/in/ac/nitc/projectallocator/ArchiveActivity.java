@@ -322,7 +322,7 @@ public class ArchiveActivity extends AppCompatActivity {
                             File path = getExternalFilesDir("Project");
 
 
-                            localFile = new File(path, "archieve.zip");
+                            localFile = new File(path, "archive.zip");
 
 
 
@@ -340,7 +340,7 @@ public class ArchiveActivity extends AppCompatActivity {
                                             Notification n  = new Notification.Builder(getApplicationContext())
                                                     .setContentTitle("Download")
                                                     .setContentText("Download completed successfully ")
-                                                    .setSmallIcon(R.drawable.user)
+                                                    .setSmallIcon(R.drawable.circle)
 
                                                     .setAutoCancel(true)
                                                    .build();
