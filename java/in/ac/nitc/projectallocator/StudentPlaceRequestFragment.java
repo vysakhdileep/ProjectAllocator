@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
+
 /**
  * Created by jsnkrm on 25/02/18.
  */
@@ -41,6 +44,8 @@ public class StudentPlaceRequestFragment extends Fragment {
     final String TAG = "StuPlaceRequestFrag";
     boolean hasProject = false;
     boolean hasAcceptedProj = false;
+    boolean hasRejectedProj = false;
+    View view;
     FirebaseUser user;
     String Facpref1, Facpref2, Facpref3, Facpref4, Facpref5;
     RequestQueue newRequest = new RequestQueue();
@@ -74,8 +79,17 @@ public class StudentPlaceRequestFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "inside onCreateView");
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_student_place_request, container, false);
+        view = inflater.inflate(R.layout.fragment_student_place_request, container, false);
 
+
+        checkForGroup();
+
+        return view;
+
+    }
+
+    private void checkForGroup()
+    {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         uid = user.getUid();
@@ -104,10 +118,11 @@ public class StudentPlaceRequestFragment extends Fragment {
                         Log.d(TAG, "empty groupid!!");
                         createGroup();
 
-                    } else {
+                    }
+                    else
+                    {
                         Log.d(TAG, "groupid====" + stu.getGroupid());
-                        isHasAcceptProject();
-
+                        hasGroupFunc();
                     }
 
 
@@ -119,11 +134,65 @@ public class StudentPlaceRequestFragment extends Fragment {
 
             }
         });
-
-        return view;
-
     }
 
+    private void hasGroupFunc()
+    {
+        DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        reqRef.addValueEventListener(new ValueEventListener() {
+            RequestQueue requestQueue;
+            boolean check = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot requestSnapshot : dataSnapshot.getChildren())
+                {
+                    requestQueue = requestSnapshot.getValue(RequestQueue.class);
+                    if(Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
+                    {
+                        check = true;
+                        break;
+                    }
+                }
+                if(check)
+                    isHasRejectedProject();
+                else
+                    checkInAccept();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void checkInAccept()
+    {
+        final DatabaseReference acceptRef = FirebaseDatabase.getInstance().getReference().child("AcceptProject");
+        acceptRef.addValueEventListener(new ValueEventListener() {
+            AcceptProject acceptProject;
+            boolean check = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot acceptSnapshot : dataSnapshot.getChildren())
+                {
+                    acceptProject = acceptSnapshot.getValue(AcceptProject.class);
+                    if(Objects.equals(acceptProject.getGroupid(), stu.getGroupid()))
+                    {
+                        showAcceptProj();
+                        check= true;
+                    }
+                }
+                if(!check)
+                    getAreaOfInterest();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     void createGroup() {
         Log.d(TAG, "Inside CreateGroup");
@@ -258,7 +327,7 @@ public class StudentPlaceRequestFragment extends Fragment {
                                         GroupMembers.remove(stu1.getRollnumber());
                                     }
                                 }
-                                getAreaOfInterest();
+                                hasGroupFunc();
                             }
 
                             @Override
@@ -278,7 +347,8 @@ public class StudentPlaceRequestFragment extends Fragment {
         });
     }
 
-    void getAreaOfInterest() {
+    void getAreaOfInterest()
+    {
         Log.d(TAG, "INSIDE getAreaOfInterest");
 
         final Button createGroupButton = getView().findViewById(R.id.create_group_button);
@@ -379,8 +449,6 @@ public class StudentPlaceRequestFragment extends Fragment {
                     }
 
                 });
-
-
                 alert.setView(mView);
                 alert.show();
             }
@@ -392,6 +460,7 @@ public class StudentPlaceRequestFragment extends Fragment {
     private void getRequiredFac(final ArrayList<String> areaId) {
         final ArrayList<String> requiredFacId = new ArrayList<>();
         DatabaseReference facRef;
+        Log.d(TAG,"area0!!!!#####______--------> "+areaId.get(0));
         facRef = FirebaseDatabase.getInstance().getReference().child("Faculty");
         requiredFac.clear();
         facRef.addValueEventListener(new ValueEventListener() {
@@ -399,19 +468,31 @@ public class StudentPlaceRequestFragment extends Fragment {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot facSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot facSnapshot : dataSnapshot.getChildren())
+                {
                     faculty = facSnapshot.getValue(Faculty.class);
-                    for (int i = 0; i < areaId.size(); i++) {
-                        if (faculty.getAreas().contains(areaId.get(i))) {
+                    requiredFacId.clear();
+                    for (int i = 0; i < areaId.size(); i++)
+                    {
+                        if (!(faculty.getAreas() == null) && faculty.getAreas().contains(areaId.get(i)))
+                        {
                             // && faculty.getCount() <= faculty.getLimit()
                             requiredFac.add(faculty);
                             requiredFacId.add(faculty.getUid());
                             break;
                         }
                     }
+
                 }
-                setspinners(requiredFac, areaId);
-                Log.d(TAG, "faculty--------------" + requiredFac.get(0).getNameof());
+                if(requiredFacId.isEmpty())
+                    Toast.makeText(getContext(),"No Faculty With Selected Domains!!!",Toast.LENGTH_LONG).show();
+                else
+                {
+                    Log.d(TAG,"INSIDE ELSE STATEMENT!!!");
+                    setspinners(requiredFac, areaId);
+
+                }
+
             }
 
             @Override
@@ -423,6 +504,7 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     private void setspinners(final ArrayList<Faculty> requiredFac, final ArrayList<String> areaId) {
 
+        Log.d(TAG,"Inside Setspinner");
         ArrayList<String> prefArray = new ArrayList<>();
 
         final Button moreFac = (Button) getView().findViewById(R.id.button_moreFac);
@@ -527,9 +609,10 @@ public class StudentPlaceRequestFragment extends Fragment {
         }
         requestRef.child(key).child("description").setValue(projectDesc);
         requestRef.child(key).child("topic").setValue(projectTopic);
+        requestRef.child(key).child("requestid").setValue(key);
         requestRef.child(key).child("status").setValue("PENDING");
         requestRef.child(key).child("groupid").setValue(stu.getGroupid());
-
+        showExistingProj();
     }
 
     private void isHasProject() {
@@ -574,6 +657,41 @@ public class StudentPlaceRequestFragment extends Fragment {
                     }
                 }
                 if (!hasProject)
+                    isHasRejectedProject();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isHasRejectedProject() {
+        Log.d(TAG, "Inside isHasAcceptProject");
+
+        DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        reqRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                for (DataSnapshot requestSnapshot : dataSnapshot.getChildren())
+                {
+                    RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
+                    if (Objects.equals(requestQueue.getGroupid(), stu.getGroupid()))
+                    {
+                        if(Objects.equals(requestQueue.getStatus(), "REJECTED"))
+                        {
+                            hasRejectedProj = true;
+                            Toast.makeText(getContext(),"Your Previous Request Has Been Completely Rejected." +
+                                    "Please Create New Project Request",Toast.LENGTH_LONG).show();
+                            removeRejectedRequest(requestQueue.getRequestid());
+                            getAreaOfInterest();
+                            break;
+                        }
+                    }
+                }
+                if (!hasRejectedProj)
                     isHasProject();
             }
 
@@ -582,6 +700,11 @@ public class StudentPlaceRequestFragment extends Fragment {
 
             }
         });
+    }
+    private void removeRejectedRequest(String requestid)
+    {
+        DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        reqRef.child(requestid).getRef().removeValue();
     }
 
     private void showAcceptProj()
@@ -608,33 +731,18 @@ public class StudentPlaceRequestFragment extends Fragment {
                 int i;
                 for (DataSnapshot acceptSnapshot : dataSnapshot.getChildren()) {
                     AcceptProject acceptProject = acceptSnapshot.getValue(AcceptProject.class);
-                    if (Objects.equals(acceptProject.getGroupid(), stu.getGroupid())) {
+                    if (Objects.equals(acceptProject.getGroupid(), stu.getGroupid()))
+                    {
                         showTopic.setText(acceptProject.getTopic());
                         showDesc.setText(acceptProject.getDescription());
+                        showStatus.setText("ACCEPTED");
+                        showStatus.setTextColor(GREEN);
                         Log.d(TAG, "areasize========" + acceptProject.getAreas().size());
                         areaList.clear();
                         for (i = 0; i < acceptProject.getAreas().size(); i++) {
                             areaList.add(acceptProject.getAreas().get(i));
                         }
-                        LinearLayout ll1 = new LinearLayout(getActivity());
-                        ll1.setOrientation(LinearLayout.HORIZONTAL);
-                        facLayout.removeAllViews();
-
-                        TextView fac1 = new TextView(getActivity());
-                        fac1.setText("Faculty: ");
-                        fac1.setTextSize(20);
-                        fac1.setPadding(10, 10, 10, 10);
-
-                        TextView fac = new TextView(getActivity());
-                        fac.setText(acceptProject.getFaculty());
-                        fac.setTextSize(20);
-                        fac.setPadding(10, 10, 10, 10);
-
-                        ll1.addView(fac1);
-                        ll1.addView(fac);
-
-                        facLayout.addView(ll1);
-                        facList.clear();
+                        facList.add(acceptProject.getFaculty());
                         getAreaNames(areaList,facList);
                     }
                 }
@@ -649,10 +757,12 @@ public class StudentPlaceRequestFragment extends Fragment {
     }
 
     private void showExistingProj() {
+
         Log.d(TAG, "Inside showExistingProj");
 
-        View linearLayout = getView().findViewById(R.id.place_request_linear_layout);
+        View linearLayout = view.findViewById(R.id.place_request_linear_layout);
         linearLayout.setVisibility(View.GONE);
+
         Button createGroupButton = getView().findViewById(R.id.create_group_button);
         createGroupButton.setVisibility(View.GONE);
 
@@ -669,18 +779,22 @@ public class StudentPlaceRequestFragment extends Fragment {
         requestRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                areaList.clear();
+                facList.clear();
                 int i;
                 for (DataSnapshot requestSnapshot : dataSnapshot.getChildren()) {
                     RequestQueue requestQueue = requestSnapshot.getValue(RequestQueue.class);
-                    if (Objects.equals(requestQueue.getGroupid(), stu.getGroupid())) {
+
+                    if (Objects.equals(requestQueue.getGroupid(), stu.getGroupid()) && (requestQueue.getFaculties() != null)) {
                         showTopic.setText(requestQueue.getTopic());
                         showDesc.setText(requestQueue.getDescription());
                         showStatus.setText(requestQueue.getStatus());
+                        showStatus.setTextColor(RED);
                         Log.d(TAG, "areasize========" + requestQueue.getAreas().size());
                         for (i = 0; i < requestQueue.getAreas().size(); i++) {
                             areaList.add(requestQueue.getAreas().get(i));
                         }
-                        Log.d(TAG, "facsize========" + requestQueue.getFaculties().size());
+//                        Log.d(TAG, "facsize========" + requestQueue.getFaculties().size());
                         for (i = 0; i < requestQueue.getFaculties().size(); i++) {
                             facList.add(requestQueue.getFaculties().get(i));
                         }
@@ -698,8 +812,8 @@ public class StudentPlaceRequestFragment extends Fragment {
     }
 
 
-    private void getAreaNames(final ArrayList<String> areaList, final ArrayList<String> facList) {
-
+    private void getAreaNames(final ArrayList<String> areaList, final ArrayList<String> facList)
+    {
         DatabaseReference areaRef = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
         areaRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -727,16 +841,17 @@ public class StudentPlaceRequestFragment extends Fragment {
 
     }
 
-    private void getFacNames(final ArrayList<String> areaList, final ArrayList<String> facList) {
+    private void getFacNames(final ArrayList<String> areaList, final ArrayList<String> facList)
+    {
         DatabaseReference facRef = FirebaseDatabase.getInstance().getReference().child("Faculty");
         facRef.addValueEventListener(new ValueEventListener() {
             int i;
             Faculty faculty;
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot facSnapshot : dataSnapshot.getChildren()) {
                     faculty = facSnapshot.getValue(Faculty.class);
+                    Log.d(TAG,"FACSIZE!!!____>" + facList.size());
                     for (i = 0; i < facList.size(); i++) {
                         if (Objects.equals(faculty.getUid(), facList.get(i)))
                             facList.set(i, faculty.getNameof());
@@ -763,11 +878,13 @@ public class StudentPlaceRequestFragment extends Fragment {
         final LinearLayout facLayout = getView().findViewById(R.id.show_faculty);
         final LinearLayout areaLayout = getView().findViewById(R.id.show_areas);
         int i;
+        areaLayout.removeAllViews();
+        facLayout.removeAllViews();
+
         for (i = 0; i < areaList.size(); i++) {
 
             LinearLayout ll1 = new LinearLayout(getActivity());
             ll1.setOrientation(LinearLayout.HORIZONTAL);
-            areaLayout.removeAllViews();
             TextView ar = new TextView(getActivity());
             ar.setText("Project Area " + (i + 1) + ":");
             ar.setTextSize(20);
@@ -787,7 +904,6 @@ public class StudentPlaceRequestFragment extends Fragment {
         for (i = 0; i < facList.size(); i++) {
             LinearLayout ll1 = new LinearLayout(getActivity());
             ll1.setOrientation(LinearLayout.HORIZONTAL);
-            facLayout.removeAllViews();
 
             TextView fac1 = new TextView(getActivity());
             fac1.setText("Preference " + (i + 1) + ":");

@@ -213,6 +213,7 @@ public class StudentBrowseProjectsFragment extends Fragment {
                 requestRef.child(key).child("groupid").setValue(stuGrpId);
                 requestRef.child(key).child("status").setValue("PENDING");
                 requestRef.child(key).child("topic").setValue(currentProj.getTopic());
+                requestRef.child(key).child("requestid").setValue(key);
             }
             });
             alert.setView(mView);

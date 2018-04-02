@@ -62,7 +62,7 @@ public class ProjectAdapter extends ArrayAdapter<ProjectIdeas> {
         final ProjectIdeas currProject = getItem(position);
 
 
-        final TextView projFacId = (TextView) listItemView.findViewById(R.id.project_list_projFacId);
+        final TextView projFacId = (TextView) listItemView.findViewById(R.id.project_list_projFacName);
 
         String uid = currProject.getFacultyid();
         Log.d(TAG, "uid" + currProject.getFacultyid());

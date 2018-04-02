@@ -4,10 +4,6 @@
     android:orientation="vertical"
     android:padding="20dp"
     >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ProjectName" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,34 +41,11 @@
         <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Description"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:id="@+id/project_list_description"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="FacultyName"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:id="@+id/project_list_projFacId"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Areas"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:padding="10dp"
         android:textSize="15dp"
-        android:id="@+id/project_list_projFacId"/>
+        android:id="@+id/project_list_projFacName"
+        />
 
     </LinearLayout>
     <LinearLayout

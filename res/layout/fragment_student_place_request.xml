@@ -27,7 +27,6 @@
         android:layout_marginLeft="10dp"
         android:orientation="vertical"
         android:id="@+id/place_request_linear_layout"
-        android:visibility="gone"
         >
 
         <LinearLayout
