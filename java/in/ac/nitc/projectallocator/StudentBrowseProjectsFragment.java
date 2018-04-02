@@ -117,7 +117,36 @@ public class StudentBrowseProjectsFragment extends Fragment {
         });
     }
 
-    private void getItemFromAdapter(ListView listView, final ProjectAdapter projectAdapter, final String stuGrpId)
+    private void checkExistingProj(final ProjectIdeas currentProj, final String stuGrpId)
+    {
+        DatabaseReference reqRef = FirebaseDatabase.getInstance().getReference().child("RequestQueue");
+        reqRef.addValueEventListener(new ValueEventListener() {
+            RequestQueue requestQueue;
+            boolean hasproj = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot requestSnapshot : dataSnapshot.getChildren())
+                {
+                    requestQueue = requestSnapshot.getValue(RequestQueue.class);
+                    if (Objects.equals(requestQueue.getGroupid(), stuGrpId)) {
+                        Toast.makeText(getContext(), "Project Request Already Placed!!!", Toast.LENGTH_SHORT).show();
+                        hasproj = true;
+                    }
+                }
+                    if(!hasproj)
+                        getAreaId(currentProj,stuGrpId);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void getItemFromAdapter(final ListView listView, final ProjectAdapter projectAdapter, final String stuGrpId)
     {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,7 +155,7 @@ public class StudentBrowseProjectsFragment extends Fragment {
             {
                     Log.d(TAG,"INSIDE IF!!!!!!!!!");
                     currentProj = projectAdapter.getItem(i);
-                    getAreaId(currentProj,stuGrpId);
+                    checkExistingProj(currentProj,stuGrpId);
             }
         });
     }
