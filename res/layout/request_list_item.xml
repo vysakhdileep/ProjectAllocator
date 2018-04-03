@@ -71,33 +71,22 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_weight="0"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:fontFamily="@font/ubuntu_m"
-            android:text="@string/area_request"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            android:typeface="sans" />
+            android:layout_weight="0"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:fontFamily="@font/ubuntu_m"
-            android:text="Student Details"
-            android:textAlignment="center"
-            android:textSize="14sp"
-            android:typeface="sans" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/ubuntu_m"
+                android:text="@string/area_request"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:typeface="sans" />
 
         <LinearLayout
             android:id="@+id/request_list_group"
@@ -112,13 +101,35 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/request_list_areas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="vertical"
-        android:padding="5dp" />
+        android:layout_weight="0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="0"
+            android:fontFamily="@font/ubuntu_m"
+            android:text="Student Details"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:typeface="sans" />
+
+        <LinearLayout
+            android:id="@+id/request_list_areas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:padding="5dp" />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/sample"

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -11,9 +13,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +43,13 @@ public class StudentProfileFragment extends Fragment{
     String uid;
     Student stuUser;
     DatabaseReference database, StudentRef;
+
+    //design
+    LinearLayout fab2,fab3;
+    FloatingActionButton fab_main;
+    Animation fab_open,fab_close, rotate_acw, rotate_cw;
+    boolean isOpen = false;
+    //
 
     public StudentProfileFragment() {
         // Required empty public constructor
@@ -77,18 +88,18 @@ public class StudentProfileFragment extends Fragment{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
 
-                        stuUser = dataSnapshot.getValue(Student.class);
-                        StudentRef.child("uid").setValue(uid);
-                        name.setText(stuUser.getNameof());
-                        email.setText(stuUser.getPersonalemail());
-                        phone.setText(stuUser.getPhonenumber());
-                        rollnum.setText(stuUser.getRollnumber());
+                    stuUser = dataSnapshot.getValue(Student.class);
+                    StudentRef.child("uid").setValue(uid);
+                    name.setText(stuUser.getNameof());
+                    email.setText(stuUser.getPersonalemail());
+                    phone.setText(stuUser.getPhonenumber());
+                    rollnum.setText(stuUser.getRollnumber());
 
-                        Log.d(TAG, "email:" + stuUser.getPersonalemail());
-                        Log.d(TAG, "Name:" + stuUser.getNameof());
-                        Log.d(TAG, "phone:" + stuUser.getPhonenumber());
-                        Log.d(TAG, "roll:" + stuUser.getRollnumber());
-                        Log.d(TAG, "groupId:" + stuUser.getGroupid());
+                    Log.d(TAG, "email:" + stuUser.getPersonalemail());
+                    Log.d(TAG, "Name:" + stuUser.getNameof());
+                    Log.d(TAG, "phone:" + stuUser.getPhonenumber());
+                    Log.d(TAG, "roll:" + stuUser.getRollnumber());
+                    Log.d(TAG, "groupId:" + stuUser.getGroupid());
                 }
             }
 
@@ -99,7 +110,7 @@ public class StudentProfileFragment extends Fragment{
             }
         });
 
-        Button editButton = view.findViewById(R.id.student_profile_edit);
+        FloatingActionButton editButton = view.findViewById(R.id.student_profile_edit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,7 +167,7 @@ public class StudentProfileFragment extends Fragment{
             }
         });
 
-        Button signoutButton = view.findViewById(R.id.student_signout);
+        FloatingActionButton signoutButton = view.findViewById(R.id.student_signout);
         signoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +176,41 @@ public class StudentProfileFragment extends Fragment{
                 FirebaseAuth.getInstance().signOut();
                 Intent myIntent = new Intent(getActivity(), SignIn.class);
                 getActivity().startActivity(myIntent);
+
+            }
+        });
+
+        fab2 = (LinearLayout) view.findViewById(R.id.fabs1);
+        fab3 = (LinearLayout) view.findViewById(R.id.fabs2);
+        fab_main = (FloatingActionButton)  view.findViewById(R.id.fab_main);
+
+
+        fab_main.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (isOpen){
+//                    fab2.startAnimation(fab_close);
+                    fab2.setVisibility(View.INVISIBLE);
+//                    fab3.startAnimation(fab_close);
+                    fab3.setVisibility(View.INVISIBLE);
+//                    fab_main.startAnimation(rotate_cw);
+                    fab2.setClickable(false);
+                    fab3.setClickable(false);
+                    isOpen = false;
+                }
+                else{
+//                    fab1.startAnimation(fab_open);
+//                    fab2.startAnimation(fab_open);
+                    fab2.setVisibility(View.VISIBLE);
+//                    fab3.startAnimation(fab_open);
+                    fab3.setVisibility(View.VISIBLE);
+//                    fab_main.startAnimation(rotate_acw);
+                    fab2.setClickable(true);
+                    fab3.setClickable(true);
+                    isOpen = true;
+                }
 
             }
         });

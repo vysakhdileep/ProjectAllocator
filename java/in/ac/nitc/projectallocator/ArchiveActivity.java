@@ -314,6 +314,9 @@ public class ArchiveActivity extends AppCompatActivity {
                     archive_download.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            Toast.makeText(getBaseContext(), "Download Started... ", Toast.LENGTH_LONG).show();
+
+
                             StorageReference mStorageRef;
                             mStorageRef = FirebaseStorage.getInstance().getReference();
                             StorageReference archiveRef = mStorageRef.child("archive").child(key).child("project.zip");
@@ -337,6 +340,7 @@ public class ArchiveActivity extends AppCompatActivity {
 
                                             Log.e("firebase ",";local tem file created  created " +temp.toString());
                                             Toast.makeText(getApplicationContext(), "Downloaded Successfully", Toast.LENGTH_LONG).show();
+
                                             Notification n  = new Notification.Builder(getApplicationContext())
                                                     .setContentTitle("Download")
                                                     .setContentText("Download completed successfully ")
@@ -350,6 +354,7 @@ public class ArchiveActivity extends AppCompatActivity {
                                                     (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
                                             notificationManager.notify(0, n);
+                                            Toast.makeText(getBaseContext(), "Download Success...", Toast.LENGTH_SHORT).show();
 
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
@@ -357,6 +362,20 @@ public class ArchiveActivity extends AppCompatActivity {
                                 public void onFailure(@NonNull Exception exception) {
                                     // Handle failed download
                                     // ...
+                                    Toast.makeText(getBaseContext(), "Download failed...", Toast.LENGTH_SHORT).show();
+                                    Notification n  = new Notification.Builder(getApplicationContext())
+                                            .setContentTitle("Download")
+                                            .setContentText("Download failed.Please try again..")
+                                            .setSmallIcon(R.drawable.circle)
+
+                                            .setAutoCancel(true)
+                                            .build();
+
+
+                                    NotificationManager notificationManager =
+                                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                                    notificationManager.notify(0, n);
                                 }
                             });
                         }

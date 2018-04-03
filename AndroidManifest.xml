@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".FirebaseMessageService">
+            android:name=".FirebaseMessageService" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -25,24 +25,24 @@
 
 
         <service
-            android:name=".FirebaseInstanceIDService">
+            android:name=".FirebaseInstanceIDService" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <receiver
             android:name="NetworkChangeReceiver"
-            android:label="NetworkChangeReceiver" >
+            android:label="NetworkChangeReceiver" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
-        <activity android:name=".ArchiveActivity"/>
-        <activity android:name=".FacultyMain" />
-        <activity android:name=".StudentMain" />
-        <activity android:name=".SignIn" />
-        <activity android:name=".Fake"></activity>
+        <activity android:name=".ArchiveActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".FacultyMain" android:screenOrientation="portrait" />
+        <activity android:name=".StudentMain" android:screenOrientation="portrait" />
+        <activity android:name=".SignIn" android:screenOrientation="portrait"/>
+        <activity android:name=".Fake" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

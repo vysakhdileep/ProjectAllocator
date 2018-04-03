@@ -1,7 +1,7 @@
 package in.ac.nitc.projectallocator;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -44,6 +46,13 @@ public class FacultyProfileFragment extends Fragment {
     private static final String TAG = "FacProfileFrag";
     CheckBox checkBox;
 
+    //design
+    LinearLayout fab1,fab2,fab3;
+    FloatingActionButton fab_main;
+    Animation fab_open,fab_close, rotate_acw, rotate_cw;
+    boolean isOpen = false;
+    //
+
     public FacultyProfileFragment() {
         // Required empty public constructor
     }
@@ -58,6 +67,7 @@ public class FacultyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_faculty_profile, container, false);
+
         getRequestData();
         FloatingActionButton signoutButton = view.findViewById(R.id.faculty_signout);
         signoutButton.setOnClickListener(new View.OnClickListener() {
@@ -68,8 +78,8 @@ public class FacultyProfileFragment extends Fragment {
                 FirebaseAuth.getInstance().signOut();
                 Intent myIntent = new Intent(getActivity(), SignIn.class);
                 getActivity().startActivity(myIntent);
-
             }
+
         });
 
 
@@ -127,14 +137,54 @@ public class FacultyProfileFragment extends Fragment {
             }
         });
 
+        fab1 = (LinearLayout) view.findViewById(R.id.fab1);
+        fab2 = (LinearLayout) view.findViewById(R.id.fab2);
+        fab3 = (LinearLayout) view.findViewById(R.id.fab3);
+        fab_main = (FloatingActionButton)  view.findViewById(R.id.fab_main);
+
+
+        fab_main.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if (isOpen){
+                    fab1.setVisibility(View.INVISIBLE);
+//                    fab2.startAnimation(fab_close);
+                    fab2.setVisibility(View.INVISIBLE);
+//                    fab3.startAnimation(fab_close);
+                    fab3.setVisibility(View.INVISIBLE);
+//                    fab_main.startAnimation(rotate_cw);
+                    fab1.setClickable(false);
+                    fab2.setClickable(false);
+                    fab3.setClickable(false);
+                    isOpen = false;
+                }
+                else{
+//                    fab1.startAnimation(fab_open);
+                    fab1.setVisibility(View.VISIBLE);
+//                    fab2.startAnimation(fab_open);
+                    fab2.setVisibility(View.VISIBLE);
+//                    fab3.startAnimation(fab_open);
+                    fab3.setVisibility(View.VISIBLE);
+//                    fab_main.startAnimation(rotate_acw);
+                    fab1.setClickable(true);
+                    fab2.setClickable(true);
+                    fab3.setClickable(true);
+                    isOpen = true;
+                }
+
+            }
+        });
+
+
+
         return view;
     }
 
     public void editAreaExpertise() {
         Log.d(TAG, "Edit expertise...");
         final AlertDialog.Builder mBUilder = new AlertDialog.Builder(getActivity());
-
-
         final View mView = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_expertise, null);
         LinearLayout linearMain;
         linearMain = (LinearLayout) mView.findViewById(R.id.list_areas);
@@ -156,9 +206,6 @@ public class FacultyProfileFragment extends Fragment {
             linearMain.addView(checkBox);
 
         }
-
-        mBUilder.setView(mView);
-        final AlertDialog ad = mBUilder.show();
         final ArrayList<String> checked =new ArrayList<>();
         Button submitareas = (Button) mView.findViewById(R.id.change_areas);
         submitareas.setOnClickListener(new View.OnClickListener() {
@@ -171,18 +218,15 @@ public class FacultyProfileFragment extends Fragment {
                     CheckBox c = (CheckBox) mView.findViewById(i);
                     if(c.isChecked()) {
                         checked.add(c.getText().toString());
-                    Log.d(TAG,"checked "+c.getText().toString());
+                        Log.d(TAG,"checked "+c.getText().toString());
                     }
                     i++;
                 }
-                ad.dismiss();
                 AddAreasFirebase(checked);
-                Toast.makeText(getActivity(), "Changed successfully....",
-                        Toast.LENGTH_SHORT).show();
-
             }
         });
-
+        mBUilder.setView(mView);
+        mBUilder.show();
 
 
     }
@@ -259,7 +303,7 @@ public class FacultyProfileFragment extends Fragment {
                 while ( i < size)
                 {
 
-                            FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
+                    FacultyExpertise.add(dataSnapshot.child(facUser.getAreas().get(i)).getValue().toString());
                     i++;
                 }
                 final FloatingActionButton editExpertise = view.findViewById(R.id.edit_expertise);

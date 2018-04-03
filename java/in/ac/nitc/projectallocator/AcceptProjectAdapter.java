@@ -32,7 +32,7 @@ import static android.content.ContentValues.TAG;
 public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
 
     ArrayList<String> area_expertise = new ArrayList<>();
-    ArrayList<String> studentlist =new ArrayList<>();
+    ArrayList<String> studentlist = new ArrayList<>();
     //ArrayList<String> t =new ArrayList<>();
     View acceptItemView;
 
@@ -45,12 +45,12 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         acceptItemView = convertView;
 
-        Log.d(TAG," In Adapter  1");
+        Log.d(TAG, " In Adapter  1");
         if (acceptItemView == null) {
             acceptItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.accept_list_item, parent, false);
         }
-        final AcceptProject currProject =getItem(position);
+        final AcceptProject currProject = getItem(position);
         final TextView facultyid = (TextView) acceptItemView.findViewById(R.id.accept_facultyid);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -59,8 +59,7 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
         FacultyRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
+                if (dataSnapshot.exists()) {
                     Faculty faculty = dataSnapshot.getValue(Faculty.class);
                     facultyid.setText(faculty.getNameof());
                 }
@@ -73,32 +72,28 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
         });
 
 
-
-
-
         TextView description = (TextView) acceptItemView.findViewById(R.id.accept_description);
         description.setText(currProject.getDescription());
 
         TextView topic = (TextView) acceptItemView.findViewById(R.id.accept_topic);
         topic.setText(currProject.getTopic());
 
-        Log.d(TAG," Size of Areas"+ currProject.getAreas().size());
 
         DatabaseReference area = FirebaseDatabase.getInstance().getReference().child("AreaExpertise");
 
         area.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange (DataSnapshot dataSnapshot) {
-                Log.d(TAG," In listener firebase");
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, " In listener firebase");
                 if (dataSnapshot.exists()) {
                     area_expertise.clear();
                     for (int i = 0; i < currProject.getAreas().size(); i++) {
-                        Log.d(TAG," In listener firebase loop "+dataSnapshot.child(currProject.getAreas().get(i)).getValue(String.class));
+                        Log.d(TAG, " In listener firebase loop " + dataSnapshot.child(currProject.getAreas().get(i)).getValue(String.class));
                         area_expertise.add(dataSnapshot.child(currProject.getAreas().get(i)).getValue(String.class));
 
                     }
                     for (int i = 0; i < area_expertise.size(); i++)
-                        printArea((LinearLayout) acceptItemView.findViewById(R.id.accept_areas),area_expertise.get(i));
+                        printArea((LinearLayout) acceptItemView.findViewById(R.id.accept_areas), area_expertise.get(i));
 
                 }
             }
@@ -114,17 +109,15 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
         group.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     studentlist.clear();
                     studentlist = (ArrayList<String>) dataSnapshot.getValue();
-                    Log.d(TAG,"Value added size"+studentlist.size());
+                    Log.d(TAG, "Value added size" + studentlist.size());
 
-                    int i=0;
+                    int i = 0;
 
 
-                    while(i < studentlist.size())
-                    {
-
+                    while (i < studentlist.size()) {
 
 
                         final DatabaseReference Studref = FirebaseDatabase.getInstance().getReference().child("Student").child(studentlist.get(i)).child("nameof");
@@ -132,13 +125,12 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
                         Studref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists())
-                                {
-                                     LinearLayout students = (LinearLayout)acceptItemView.findViewById(R.id.accept_students);
+                                if (dataSnapshot.exists()) {
+                                    LinearLayout students = (LinearLayout) acceptItemView.findViewById(R.id.accept_students);
                                     TextView item = new TextView(getContext());
                                     String stu = dataSnapshot.getValue(String.class);
                                     item.setText(stu);
-                                    Log.d(TAG,"Student name"+stu);
+                                    Log.d(TAG, "Student name" + stu);
                                     students.addView(item);
                                 }
                             }
@@ -151,9 +143,9 @@ public class AcceptProjectAdapter extends ArrayAdapter<AcceptProject> {
                         i++;
 
                     }
-                    }
-
                 }
+
+            }
 
 
             @Override

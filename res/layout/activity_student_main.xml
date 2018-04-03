@@ -12,21 +12,26 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="right|center_horizontal"
             android:background="@color/colorPrimary"
             android:padding="10dp"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+
             <Button
                 android:id="@+id/toolbarbtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_margin="5dp"
+                android:layout_height="50dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_margin="10dp"
                 android:background="@drawable/arcback"
-                android:text="Archive" />
+                android:text="Archive"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
 
         </android.support.v7.widget.Toolbar>
+
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -34,11 +39,15 @@
             android:layout_height="wrap_content"
             app:tabGravity="fill"
             app:tabMode="fixed" />
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  >
+
+
+    </android.support.v4.view.ViewPager>
 </android.support.design.widget.CoordinatorLayout>
