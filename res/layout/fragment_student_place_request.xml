@@ -10,7 +10,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
-        android:padding="10dp">
+
+        android:padding="10dp"
+
+        android:id="@+id/place_request_linear_layout"
+        >
+
 
         <LinearLayout
             android:id="@+id/existing_request_linear_layout"

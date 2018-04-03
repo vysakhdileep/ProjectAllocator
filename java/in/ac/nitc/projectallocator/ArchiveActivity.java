@@ -389,30 +389,29 @@ public class ArchiveActivity extends AppCompatActivity {
         }
     }
 
-    public void uploadArchive() {
-
-        StorageReference mStorageRef;
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-        StorageReference archiveRef = mStorageRef.child("images/rivers.jpg");
-
-        archiveRef.putFile(file)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        // ...
-                    }
-                });
-    }
+//    public void uploadArchive() {
+//
+//        Log.d(TAG,"Inside upload");
+//        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+//
+//        Uri file = Uri.fromFile(new File("/storage/emulated/0/Download/image"));
+//        StorageReference archiveRef = storageRef.child("archive/-Lsnsdnidodo/projects");
+//        UploadTask uploadTask = archiveRef.putFile(file);
+//
+//        // Register observers to listen for when the download is done or if it fails
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//            }
+//        });
+//    }
 
     private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
     private long mBackPressed;
